@@ -5,41 +5,55 @@
     <title>PI1</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+    </style>
   </head>
   
+
   <body>
   
-    <header>
+    <header align="center">
       <h2>Projeto Integrador 1</h2>
     </header>
   
-    <section>
-      <nav>
-        <ul>
-          <li><a href="/consulta">Consulta</a></li>
-        </ul>
-      </nav>
-  
-      <article>
-  
-        <h1>Cadastro</h1>
-        <form>
-          <label for="fname"> Nome: </label>
-          <input type="text" id="fname" name="fname"><br>
-  
-          <br>
-          <p>Curso escolhido:</p>
-          <input type="radio" id="ec" name="course" value="EC" <label for="ec">Engenharia da Computação<br>
-  
-          <input type="radio" id="cd" name="course" value="CD" <label for="ec">Ciência de Dados<br>
-  
-          <input type="radio" id="ti" name="course" value="TI" <label for="ec">Tecnologia da Informação<br>
-          <input type="submit" value="Salvar">
-          <input type="reset" value="Limpar">
-        </form>
-      </article>
-  
-    </section>
-  
+    <a href="/add">Adicionar usuário</a>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Curso</th>
+        <th>Ações</th>
+      </tr>
+      {% for e in lista %}
+      <tr>
+
+        <td> {{ e[0] }} </td>
+        <td> {{ e[1] }} </td>
+        <td> {{ e[2] }} </td>
+        <td>
+          <a href="/edit/{{e.id}}">Editar</a>
+          <a href="/delete/{{e.id}}">Excluir</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table> 
+
   </body>
   </html>
