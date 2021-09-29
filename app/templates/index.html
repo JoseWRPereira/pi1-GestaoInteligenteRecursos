@@ -48,8 +48,8 @@
         <td> {{ e[1] }} </td>
         <td> {{ e[2] }} </td>
         <td>
-          <a href="/edit/{{e.id}}">Editar</a>
-          <a href="/delete/{{e.id}}">Excluir</a>
+          <a href="/edit/{{ e[0] }}">Editar</a>
+          <a href="/delete/{{e[0]}}">Excluir</a>
         </td>
       </tr>
       {% endfor %}
