@@ -6,7 +6,9 @@ import mariadb
 import sys
 import json
 
+
 app = Flask(__name__)
+
 
 # connection parameters
 db_conn_params = {
