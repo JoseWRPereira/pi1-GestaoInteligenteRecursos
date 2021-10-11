@@ -91,5 +91,35 @@ def reset():
     return redirect(url_for('index'))
 
 
+
+
+###############################################################################
+###      PI1_DB Disciplinas
+###############################################################################
+
+@app.route("/tb_disciplinas", methods=['GET', 'POST'])
+def tb_disciplinas():
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.disciplina( codigo varchar(5) not null, nome varchar(50) not null, primary key(codigo));"
+    db_cmd(sql)
+    editar = ['','']
+    if request.method == 'POST':
+        codigo = request.form['disciplinaCodigo']
+        nome = request.form['disciplinaNome']
+        sql =  "INSERT INTO disciplina (codigo, nome) VALUES ('{}', '{}');".format(str(codigo), str(nome))
+        db_cmd(sql)
+        return redirect(url_for('tb_disciplinas'))
+    sql = "SELECT * FROM disciplina;"
+    lista = db_cmd(sql)
+    return render_template('tb_disciplinas.html', lista=lista, editar=editar)
+
+@app.route("/deldisciplina/<codigo>", methods=['GET', 'POST'])
+def deldisciplina(codigo):
+    sql = "DELETE FROM disciplina WHERE codigo='{}';".format(codigo)
+    db_cmd(sql)
+    return redirect(url_for('tb_disciplinas'))
+
+
+
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
