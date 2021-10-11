@@ -120,6 +120,34 @@ def deldisciplina(codigo):
 
 
 
+###############################################################################
+###      PI1_DB Usuarios
+###############################################################################
+
+@app.route("/tb_usuarios", methods=['GET', 'POST'])
+def tb_usuarios():
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(30), admissao VARCHAR(20), PRIMARY KEY(nif));"
+    db_cmd(sql)
+    editar = ['','']
+    if request.method == 'POST':
+        nif = request.form['usuarioNIF']
+        nome = request.form['usuarioNome']
+        disciplina = request.form['usuarioDisciplina']
+        admissao = request.form['usuarioAdmissao']
+        sql =  "INSERT INTO usuario (nif, nome, disciplina, admissao) VALUES ('{}','{}', '{}','{}');".format(str(nif), str(nome), str(disciplina), str(admissao) )
+        db_cmd(sql)
+        return redirect(url_for('tb_usuarios'))
+    sql = "SELECT * FROM usuario;"
+    lista = db_cmd(sql)
+    return render_template('tb_usuarios.html', lista=lista, editar=editar)
+
+@app.route("/delusuario/<nif>", methods=['GET', 'POST'])
+def delusuario(nif):
+    sql = "DELETE FROM usuario WHERE codigo='{}';".format(nif)
+    db_cmd(sql)
+    return redirect(url_for('tb_usuarios'))
+
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
