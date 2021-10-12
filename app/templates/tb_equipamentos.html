@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+ 
+  <head>
+    <title>Tabela Equipamentos</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+    </style>
+  </head>
+  
+
+  <body>
+  
+    <header align="center">
+      <h2>Tabela de Equipamentos</h2>
+    </header>
+
+    <form action="/tb_equipamentos" method="POST">
+      <label for="equip_npatr"> Número de Patrimônio: </label>
+      <input type="text" name="equipNumPatr" value={{editar[0][0]}}><br>
+
+      <label for="equip_nome"> Nome: </label>
+      <input type="text" name="equipNome" value={{editar[0][1]}}><br>
+
+      <label for="equip_descricao"> Descrição: </label>
+      <input type="text" name="equipDescricao" value={{editar[0][2]}}><br>
+
+      <label for="equip_carrinho"> Carrinho: </label>
+      <input type="text" name="equipCarrinho" value={{editar[0][1]}}><br>
+
+      <div>
+        <label for="equip_aquisicao">Data da aquisição:</label>
+        <input type="date" id="equipAquisicao" name="equipAquisicao">
+      </div>
+
+      <div>
+        <label for="equip_ultimaManut">Data da última manutenção:</label>
+        <input type="date" id="equipUltimaManut" name="equipUltimaManut">
+      </div>
+
+      <!-- <label for="equip_status"> Status: </label>
+      <input type="text" name="equipStatus" value={{editar[0][5]}}><br> -->
+      <div class="select-block">
+        <label for="equip_status"> Status: </label>
+        <select name="equipStatus" id="equipStatus" required>
+            <option value=""> </option>
+            <option value="Manut">Em manutenção</option>
+            <option value="Operando">Operando</option>
+            <option value="Quebrado">Quebrado</option>
+          </select>
+      </div>
+
+
+      <br>
+      <input type="submit" value="Salvar">
+    </form>
+
+
+    <hr>
+
+    <table>
+      <tr>
+        <th>NumPatrimônio</th>
+        <th>Nome</th>
+        <th>Carrinho</th>
+        <th>Descrição</th>
+        <th>Data de aquisição</th>
+        <th>Data da última manutenção</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+      {% for e in lista %}
+      <tr>
+        <td> {{ e[0] }} </td>
+        <td> {{ e[1] }} </td>
+        <td> {{ e[2] }} </td>
+        <td> {{ e[3] }} </td>
+        <td> {{ e[4] }} </td>
+        <td> {{ e[5] }} </td>
+        <td> {{ e[6] }} </td>
+        <td>
+          <a href="/delequipamento/{{e[0]}}">Excluir</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table> 
+
+
+  </body>
+  </html>

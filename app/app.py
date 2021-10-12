@@ -126,9 +126,11 @@ def deldisciplina(codigo):
 
 @app.route("/tb_usuarios", methods=['GET', 'POST'])
 def tb_usuarios():
-    sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(30), admissao VARCHAR(20), PRIMARY KEY(nif));"
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(30), admissao VARCHAR(20), PRIMARY KEY(nif), FOREIGN KEY(disciplina) REFERENCES disciplina(codigo) );"
     db_cmd(sql)
     editar = ['','']
+    sql = "SELECT * FROM disciplina;"
+    ucs = db_cmd(sql)
     if request.method == 'POST':
         nif = request.form['usuarioNIF']
         nome = request.form['usuarioNome']
@@ -139,7 +141,7 @@ def tb_usuarios():
         return redirect(url_for('tb_usuarios'))
     sql = "SELECT * FROM usuario;"
     lista = db_cmd(sql)
-    return render_template('tb_usuarios.html', lista=lista, editar=editar)
+    return render_template('tb_usuarios.html', lista=lista, editar=editar, ucs=ucs)
 
 @app.route("/delusuario/<nif>", methods=['GET', 'POST'])
 def delusuario(nif):
@@ -149,5 +151,83 @@ def delusuario(nif):
 
 
 
+
+###############################################################################
+###      PI1_DB Equipamentos
+###############################################################################
+
+@app.route("/tb_equipamentos", methods=['GET', 'POST'])
+def tb_equipamentos():
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.equipamento( np INT NOT NULL, nome VARCHAR(50) NOT NULL, carrinho INT, descricao VARCHAR(50), adquirido_em VARCHAR(10), ultima_manutencao_em VARCHAR(10), status VARCHAR(20), PRIMARY KEY(np));"
+    db_cmd(sql)
+    editar = ['','']
+    if request.method == 'POST':
+        np = request.form['equipNumPatr']
+        nome = request.form['equipNome']
+        descricao = request.form['equipDescricao']
+        aquisicao = request.form['equipAquisicao']
+        manutencao = request.form['equipUltimaManut']
+        status = request.form['equipStatus']
+        sql =  "INSERT INTO equipamento (np, nome, descricao, adquirido_em, ultima_manutencao_em, status) VALUES ('{}','{}','{}','{}','{}','{}');".format(str(np), str(nome), str(descricao), str(aquisicao), str(manutencao), str(status) )
+        db_cmd(sql)
+        return redirect(url_for('tb_equipamentos'))
+    sql = "SELECT * FROM equipamento;"
+    lista = db_cmd(sql)
+    return render_template('tb_equipamentos.html', lista=lista, editar=editar)
+
+@app.route("/delequipamento/<np>", methods=['GET', 'POST'])
+def delequipamento(np):
+    sql = "DELETE FROM equipamento WHERE np='{}';".format(np)
+    db_cmd(sql)
+    return redirect(url_for('tb_equipamentos'))
+
+
+
+###############################################################################
+###      PI1_DB Carrinhos
+###############################################################################
+
+@app.route("/tb_carrinhos", methods=['GET', 'POST'])
+def tb_carrinhos():
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.carrinho( id INT NOT NULL, nome VARCHAR(50) NOT NULL, qtdEquipamentos INT, status VARCHAR(50), obs VARCHAR(50), PRIMARY KEY(id));"
+    db_cmd(sql)
+    editar = ['','']
+    if request.method == 'POST':
+        id = request.form['carrinhoId']
+        nome = request.form['carrinhoNome']
+        qtdEquipamentos = request.form['carrinhoQtdEquip']
+        status = request.form['carrinhoStatus']
+        obs = request.form['carrinhoObs']
+        sql =  "INSERT INTO carrinho (id, nome, qtdEquipamentos, status, obs) VALUES ('{}','{}','{}','{}','{}');".format(str(id), str(nome), str(qtdEquipamentos), str(status), str(obs) )
+        db_cmd(sql)
+        return redirect(url_for('tb_carrinhos'))
+    sql = "SELECT * FROM carrinho;"
+    lista = db_cmd(sql)
+    return render_template('tb_carrinhos.html', lista=lista, editar=editar)
+
+@app.route("/delcarrinho/<id>", methods=['GET', 'POST'])
+def delcarrinho(id):
+    sql = "DELETE FROM carrinho WHERE id='{}';".format(id)
+    db_cmd(sql)
+    return redirect(url_for('tb_carrinhos'))
+
+
+###############################################################################
+###      PI1_DB DROP ALL TABLES
+###############################################################################
+@app.route("/dropalltables")
+def dropalltables():
+    sql = "DROP TABLE IF EXISTS usuario;"
+    db_cmd(sql)
+    sql = "DROP TABLE IF EXISTS equipamento;"
+    db_cmd(sql)
+    sql = "DROP TABLE IF EXISTS disciplina;"
+    db_cmd(sql)
+    sql = "DROP TABLE IF EXISTS carrinho;"
+    db_cmd(sql)
+    return redirect(url_for('index'))
+
+###############################################################################
+###############################################################################
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

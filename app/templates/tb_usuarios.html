@@ -40,11 +40,24 @@
       <label for="usuario_nome"> Nome: </label>
       <input type="text" name="usuarioNome" value={{editar[0][1]}}><br>
 
-      <label for="usuario_disciplina"> Disciplina: </label>
-      <input type="text" name="usuarioDisciplina" value={{editar[0][2]}}><br>
+      <!-- <label for="usuario_disciplina"> Disciplina: </label>
+      <input type="text" name="usuarioDisciplina" value={{editar[0][2]}}><br> -->
+  
+      <div class="select-block">
+        <label for="usuario_disciplina"> Disciplina </label>
+        <select name="usuarioDisciplina" id="usuarioDisciplina" required>
+            <option value="">Selecione uma Disciplina</option>
+            {% for e in ucs %}
+            <option value={{e[0]}}>{{e[1]}}</option>
+            {% endfor %}
+          </select>
+      </div>
 
-      <label for="usuario_admissao"> Data de Admissão: </label>
-      <input type="text" name="usuarioAdmissao" value={{editar[0][3]}}><br>
+      <div>
+        <label for="usuario_admissao">Data de admissão:</label>
+        <input type="date" id="usuarioAdmissao" name="usuarioAdmissao">
+      </div>
+
       <br>
       <input type="submit" value="Salvar">
     </form>
