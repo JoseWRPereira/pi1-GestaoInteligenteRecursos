@@ -5,25 +5,6 @@
     <title>PI1</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  
-  <style>
-    table {
-      font-family: arial, sans-serif;
-      border-collapse: collapse;
-      width: 100%;
-    }
-    
-    td, th {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-    }
-    
-    tr:nth-child(even) {
-      background-color: #dddddd;
-    }
-    </style>
   </head>
   
 
@@ -33,27 +14,33 @@
       <h2>Projeto Integrador 1</h2>
     </header>
   
-    <a href="/add">Adicionar usuário</a>
-    <a href="/reset">Reset tabela</a>
-    <table>
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Curso</th>
-        <th>Ações</th>
-      </tr>
-      {% for e in lista %}
-      <tr>
-        <td> {{ e[0] }} </td>
-        <td> {{ e[1] }} </td>
-        <td> {{ e[2] }} </td>
-        <td>
-          <a href="/edit/{{ e[0] }}">Editar</a>
-          <a href="/delete/{{e[0]}}">Excluir</a>
-        </td>
-      </tr>
-      {% endfor %}
-    </table> 
+    <!-- Disciplina -->
+    <div class="select-block">
+      <label for="disciplina"> Disciplina </label>
+      <select name="disciplina" id="disciplina" required>
+          <option value="">Selecione uma Disciplina</option>
+          {% for e in ucs %}
+          <option value={{e[0]}}>{{e[1]}}</option>
+          {% endfor %}
+        </select>
+    </div>
+    <!-- Usuário: Professor(a) -->
+    <div class="select-block">
+      <label for="usuario"> Usuário </label>
+      <select name="usuario" id="usuario" required>
+          <option value="">Selecione um usuário</option>
+          {% for e in profs %}
+          <option value={{e[0]}}>{{e[1]}}</option>
+          {% endfor %}
+        </select>
+    </div>
+    <!-- Senha -->
+    <form>
+      <label for="pwd">Senha:</label>
+      <input type="password" id="pwd" name="pwd">
+      <br><br>
+      <input type="submit" value="Entrar">
+    </form> 
 
   </body>
-  </html>
+</html>

@@ -6,8 +6,26 @@ import sys
 import json
 
 
+class Calendario:
+    def __init__(self):
+        self.data = "";
+    def set(self, dt ):
+        self.data = dt
+    def get(self):
+        return(self.data)
+
+class Carrinho:
+    def __init__(self):
+        self.carrinho = "";
+    def set(self, lista ):
+        self.carrinho = lista
+    def get(self):
+        return(self.carrinho)
+
 app = Flask(__name__)
 
+car = Carrinho();
+cal = Calendario();
 
 # connection parameters
 db_conn_params = {
@@ -45,9 +63,30 @@ def db_cmd(sql):
 
 @app.route("/")
 def index():
-    sql = "SELECT * FROM users;"
+    sql = "SELECT * FROM disciplina;"
+    ucs = db_cmd(sql)
+        # sql = "SELECT * FROM usuario WHERE codigo={};".format(discipl)
+    sql = "SELECT * FROM usuario;"
+    profs = db_cmd(sql)
+    return render_template('index.html', profs=profs, ucs=ucs)
+
+
+
+
+@app.route("/manager", methods=['GET', 'POST'])
+def manager():
+    sql = "SELECT * FROM reserva;"
     lista = db_cmd(sql)
-    return render_template('index.html', lista=lista)
+    imp = ""
+    if request.method == 'POST':
+        cal.set(request.form['calendario'])
+        sql =  "SELECT * FROM reserva WHERE data='{}' ORDER BY carrinho_id;".format( cal.get() )
+        lista = db_cmd(sql)
+        sql = "SELECT id,nome FROM carrinho WHERE id NOT IN  (SELECT carrinho_id FROM reserva where data='{}' ORDER BY carrinho_id);".format(cal.get())
+        car.set( db_cmd(sql) )
+    return render_template('manager.html', lista=lista, car=car.get(), cal=cal.get(), imp=imp )
+
+
 
 
 @app.route("/add", methods=['GET', 'POST'])
@@ -158,7 +197,7 @@ def delusuario(nif):
 
 @app.route("/tb_equipamentos", methods=['GET', 'POST'])
 def tb_equipamentos():
-    sql = "CREATE TABLE IF NOT EXISTS pi1_db.equipamento( np INT NOT NULL, nome VARCHAR(50) NOT NULL, carrinho INT, descricao VARCHAR(50), adquirido_em VARCHAR(10), ultima_manutencao_em VARCHAR(10), status VARCHAR(20), PRIMARY KEY(np));"
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.equipamento( np INT NOT NULL, nome VARCHAR(50) NOT NULL, carrinho INT, descricao VARCHAR(50), adquirido_em DATE, ultima_manutencao_em DATE, status VARCHAR(20), PRIMARY KEY(np));"
     db_cmd(sql)
     editar = ['','']
     if request.method == 'POST':
@@ -189,7 +228,7 @@ def delequipamento(np):
 
 @app.route("/tb_carrinhos", methods=['GET', 'POST'])
 def tb_carrinhos():
-    sql = "CREATE TABLE IF NOT EXISTS pi1_db.carrinho( id INT NOT NULL, nome VARCHAR(50) NOT NULL, qtdEquipamentos INT, status VARCHAR(50), obs VARCHAR(50), PRIMARY KEY(id));"
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.carrinho( id INT NOT NULL, nome VARCHAR(50) NOT NULL, qtd_equipamentos INT, status VARCHAR(50), obs VARCHAR(50), PRIMARY KEY(id));"
     db_cmd(sql)
     editar = ['','']
     if request.method == 'POST':
@@ -211,6 +250,35 @@ def delcarrinho(id):
     db_cmd(sql)
     return redirect(url_for('tb_carrinhos'))
 
+
+###############################################################################
+###      PI1_DB Reservas
+###############################################################################
+
+@app.route("/tb_reservas", methods=['GET', 'POST'])
+def tb_reservas():
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.reserva( id INT NOT NULL AUTO_INCREMENT, data DATE, carrinho_id INT, usuario_id INT, PRIMARY KEY(id), FOREIGN KEY(carrinho_id) REFERENCES carrinho(id), FOREIGN KEY(usuario_id) REFERENCES usuario(nif) );"
+    db_cmd(sql)
+    if request.method == 'POST':
+        cal_ = request.form['calendario']
+        car_ = request.form['carrinho']
+        usr_ = request.form['usuario']
+        sql =  "INSERT INTO reserva (data, carrinho_id, usuario_id) VALUES ('{}','{}','{}');".format(str(cal_), str(car_), str(usr_))
+        db_cmd(sql)
+        return redirect(url_for('tb_reservas'))
+    sql = "SELECT * FROM carrinho;"
+    car = db_cmd(sql)
+    sql = "SELECT * FROM usuario;"
+    usr = db_cmd(sql)
+    sql = "SELECT * FROM reserva;"
+    lista = db_cmd(sql)
+    return render_template('tb_reservas.html', lista=lista, car=car, usr=usr )
+
+# @app.route("/addreserva/<id>", methods=['GET', 'POST'])
+# def addreserva(id):
+#     sql = "DELETE FROM carrinho WHERE id='{}';".format(id)
+#     db_cmd(sql)
+#     return redirect(url_for('tb_carrinhos'))
 
 ###############################################################################
 ###      PI1_DB DROP ALL TABLES
