@@ -2,26 +2,11 @@
 <html lang="pt-BR">
  
   <head>
-    <title>Manager</title>
+    <title>Login</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-      table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-      }
-      
-      td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-      }
-      
-      tr:nth-child(even) {
-        background-color: #dddddd;
-      }
 
+    <style>  
       .w3-third .bigbtn {
        border:1px solid #e3e3e3;
        background-color:#E7E9EB;
@@ -78,44 +63,18 @@
   <body>
   
     <header align="center">
-      <h2>Gerenciamento de Reservas</h2>
+      <h3>{{msg}}</h3>
     </header>
+  
+    <div class="w3-row-padding" style="margin-left:16px;margin-right:16px">
 
-    <!-- Calendário -->
-    <form action="/manager" method="POST">
-      <label for="calendario">Calendário:</label>
-      <input type="date" id="calendario" name="calendario">
-      <input type="submit" value="Buscar">
-    </form>
-    <hr>
-
-    {% for d in car %}
-    <div class="w3-third">
-      <a class="bigbtn" href="/manager/{{d[0]}}"> {{d[1]}} </a>
-    </div>
-    {% endfor %}
-
-    <hr>
-    <table>
-      <tr>
-        <th>ID</th>
-        <th>Data</th>
-        <th>Carrinho</th>
-        <th>Usuário</th>
-        <th>Ações</th>
-      </tr>
-      {% for e in lista %}
-      <tr>
-        <td> {{ e[0] }} </td>
-        <td> {{ e[1] }} </td>
-        <td> {{ e[2] }} </td>
-        <td> {{ e[3] }} </td>
-        <td>
-          <a href="/delreserva/{{e[0]}}">Excluir</a>
-        </td>
-      </tr>
+      {% for d in lista %}
+      <div class="w3-third">
+        <a class="bigbtn" href="/login/{{campo}}/{{d[0]}}"> {{d[1]}} </a>
+      </div>
       {% endfor %}
-    </table> 
-
+  
+    </div>
+    <br>
   </body>
 </html>

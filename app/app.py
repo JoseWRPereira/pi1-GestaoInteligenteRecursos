@@ -8,7 +8,7 @@ import json
 
 class Calendario:
     def __init__(self):
-        self.data = "";
+        self.data = ""
     def set(self, dt ):
         self.data = dt
     def get(self):
@@ -16,16 +16,54 @@ class Calendario:
 
 class Carrinho:
     def __init__(self):
-        self.carrinho = "";
+        self.carrinho = ""
     def set(self, lista ):
         self.carrinho = lista
     def get(self):
         return(self.carrinho)
 
+class Acesso:
+    def __init__(self):
+        self.uc = ''
+        self.user = ''
+        self.pwd = ''
+    def set_uc(self, uc):
+        self.uc = uc
+    def set_user(self, user):
+        self.user = user
+    def set_pwd(self,pwd):
+        self.pwd = pwd
+    def get_uc(self):
+        return(self.uc)
+    def get_user(self):
+        return(self.user)
+    def get_pwd(self):
+        return(self.pwd)
+
+class LoginAcesso:
+    def __init__(self):
+        self.msg = ""
+        self.campo = ""
+        self.sql = ""
+    def set(self, m,c,s):
+        self.msg = m
+        self.campo = c
+        self.sql = s
+    def get_msg(self):
+        return(self.msg)
+    def get_campo(self):
+        return(self.campo)
+    def get_sql(self):
+        return(self.sql)
+
+
+
 app = Flask(__name__)
 
-car = Carrinho();
-cal = Calendario();
+car = Carrinho()
+cal = Calendario()
+acesso = Acesso()
+loginAcesso = LoginAcesso()
 
 # connection parameters
 db_conn_params = {
@@ -63,29 +101,65 @@ def db_cmd(sql):
 
 @app.route("/")
 def index():
-    sql = "SELECT * FROM disciplina;"
-    ucs = db_cmd(sql)
-        # sql = "SELECT * FROM usuario WHERE codigo={};".format(discipl)
-    sql = "SELECT * FROM usuario;"
-    profs = db_cmd(sql)
-    return render_template('index.html', profs=profs, ucs=ucs)
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.disciplina( codigo varchar(6) not null, nome varchar(50) not null, primary key(codigo));"
+    db_cmd(sql)
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(6), admissao VARCHAR(20), PRIMARY KEY(nif), FOREIGN KEY(disciplina) REFERENCES disciplina(codigo) );"
+    db_cmd(sql)
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.equipamento( np INT NOT NULL, nome VARCHAR(50) NOT NULL, carrinho INT, descricao VARCHAR(50), adquirido_em DATE, ultima_manutencao_em DATE, status VARCHAR(20), PRIMARY KEY(np));"
+    db_cmd(sql)
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.carrinho( id INT NOT NULL, nome VARCHAR(50) NOT NULL, qtd_equipamentos INT, status VARCHAR(50), obs VARCHAR(50), PRIMARY KEY(id));"
+    db_cmd(sql)
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.reserva( id INT NOT NULL AUTO_INCREMENT, data DATE, carrinho_id INT, usuario_id INT, PRIMARY KEY(id), FOREIGN KEY(carrinho_id) REFERENCES carrinho(id), FOREIGN KEY(usuario_id) REFERENCES usuario(nif) );"
+    db_cmd(sql)
 
+    loginAcesso.set("Escolha a unidade curricular:","disciplina","SELECT codigo,nome FROM disciplina;")
+    return redirect(url_for('login'))
+
+
+@app.route("/login")
+def login():
+    lista = db_cmd(loginAcesso.get_sql())
+    return render_template('login.html', msg=loginAcesso.get_msg(), campo=loginAcesso.get_campo(), lista=lista )
+
+@app.route("/login/disciplina/<uc>")
+def login_disciplina(uc):
+    acesso.set_uc( uc )
+    loginAcesso.set("Escolha o usuário de acesso:","usuario","SELECT nif,nome FROM usuario WHERE disciplina='{}';".format(acesso.get_uc()))
+    return redirect(url_for('login'))
+
+@app.route("/login/usuario/<nif>")
+def login_usuario(nif):
+    acesso.set_user(nif)
+    return redirect(url_for('loginsenha'))
+
+@app.route("/loginsenha", methods=['GET','POST'])
+def loginsenha():
+    if request.method == 'POST':
+        acesso.set_pwd(request.form['pwd'])
+        return redirect(url_for('manager'))
+    return render_template('loginsenha.html');
 
 
 
 @app.route("/manager", methods=['GET', 'POST'])
 def manager():
-    sql = "SELECT * FROM reserva;"
+    sql = "SELECT * FROM reserva WHERE data=CURDATE();"
     lista = db_cmd(sql)
     imp = ""
     if request.method == 'POST':
         cal.set(request.form['calendario'])
         sql =  "SELECT * FROM reserva WHERE data='{}' ORDER BY carrinho_id;".format( cal.get() )
         lista = db_cmd(sql)
-        sql = "SELECT id,nome FROM carrinho WHERE id NOT IN  (SELECT carrinho_id FROM reserva where data='{}' ORDER BY carrinho_id);".format(cal.get())
+        sql = "SELECT id,nome FROM carrinho WHERE id NOT IN (SELECT carrinho_id FROM reserva where data='{}' ORDER BY carrinho_id);".format(cal.get())
         car.set( db_cmd(sql) )
     return render_template('manager.html', lista=lista, car=car.get(), cal=cal.get(), imp=imp )
 
+@app.route("/manager/<car_id>", methods=['GET', 'POST'])
+def manager_car(car_id):
+    sql =  "INSERT INTO reserva (data, carrinho_id, usuario_id) VALUES ('{}', '{}', '{}');".format(cal.get(), car_id, acesso.get_user())
+    db_cmd(sql)
+    return redirect(url_for('manager'))
+    
 
 
 
@@ -138,8 +212,8 @@ def reset():
 
 @app.route("/tb_disciplinas", methods=['GET', 'POST'])
 def tb_disciplinas():
-    sql = "CREATE TABLE IF NOT EXISTS pi1_db.disciplina( codigo varchar(5) not null, nome varchar(50) not null, primary key(codigo));"
-    db_cmd(sql)
+    # sql = "CREATE TABLE IF NOT EXISTS pi1_db.disciplina( codigo varchar(5) not null, nome varchar(50) not null, primary key(codigo));"
+    # db_cmd(sql)
     editar = ['','']
     if request.method == 'POST':
         codigo = request.form['disciplinaCodigo']
@@ -165,8 +239,8 @@ def deldisciplina(codigo):
 
 @app.route("/tb_usuarios", methods=['GET', 'POST'])
 def tb_usuarios():
-    sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(30), admissao VARCHAR(20), PRIMARY KEY(nif), FOREIGN KEY(disciplina) REFERENCES disciplina(codigo) );"
-    db_cmd(sql)
+    # sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(30), admissao VARCHAR(20), PRIMARY KEY(nif), FOREIGN KEY(disciplina) REFERENCES disciplina(codigo) );"
+    # db_cmd(sql)
     editar = ['','']
     sql = "SELECT * FROM disciplina;"
     ucs = db_cmd(sql)
@@ -197,8 +271,8 @@ def delusuario(nif):
 
 @app.route("/tb_equipamentos", methods=['GET', 'POST'])
 def tb_equipamentos():
-    sql = "CREATE TABLE IF NOT EXISTS pi1_db.equipamento( np INT NOT NULL, nome VARCHAR(50) NOT NULL, carrinho INT, descricao VARCHAR(50), adquirido_em DATE, ultima_manutencao_em DATE, status VARCHAR(20), PRIMARY KEY(np));"
-    db_cmd(sql)
+    # sql = "CREATE TABLE IF NOT EXISTS pi1_db.equipamento( np INT NOT NULL, nome VARCHAR(50) NOT NULL, carrinho INT, descricao VARCHAR(50), adquirido_em DATE, ultima_manutencao_em DATE, status VARCHAR(20), PRIMARY KEY(np));"
+    # db_cmd(sql)
     editar = ['','']
     if request.method == 'POST':
         np = request.form['equipNumPatr']
@@ -228,8 +302,8 @@ def delequipamento(np):
 
 @app.route("/tb_carrinhos", methods=['GET', 'POST'])
 def tb_carrinhos():
-    sql = "CREATE TABLE IF NOT EXISTS pi1_db.carrinho( id INT NOT NULL, nome VARCHAR(50) NOT NULL, qtd_equipamentos INT, status VARCHAR(50), obs VARCHAR(50), PRIMARY KEY(id));"
-    db_cmd(sql)
+    # sql = "CREATE TABLE IF NOT EXISTS pi1_db.carrinho( id INT NOT NULL, nome VARCHAR(50) NOT NULL, qtd_equipamentos INT, status VARCHAR(50), obs VARCHAR(50), PRIMARY KEY(id));"
+    # db_cmd(sql)
     editar = ['','']
     if request.method == 'POST':
         id = request.form['carrinhoId']
@@ -257,8 +331,8 @@ def delcarrinho(id):
 
 @app.route("/tb_reservas", methods=['GET', 'POST'])
 def tb_reservas():
-    sql = "CREATE TABLE IF NOT EXISTS pi1_db.reserva( id INT NOT NULL AUTO_INCREMENT, data DATE, carrinho_id INT, usuario_id INT, PRIMARY KEY(id), FOREIGN KEY(carrinho_id) REFERENCES carrinho(id), FOREIGN KEY(usuario_id) REFERENCES usuario(nif) );"
-    db_cmd(sql)
+    # sql = "CREATE TABLE IF NOT EXISTS pi1_db.reserva( id INT NOT NULL AUTO_INCREMENT, data DATE, carrinho_id INT, usuario_id INT, PRIMARY KEY(id), FOREIGN KEY(carrinho_id) REFERENCES carrinho(id), FOREIGN KEY(usuario_id) REFERENCES usuario(nif) );"
+    # db_cmd(sql)
     if request.method == 'POST':
         cal_ = request.form['calendario']
         car_ = request.form['carrinho']
