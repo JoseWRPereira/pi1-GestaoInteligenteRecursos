@@ -5,62 +5,19 @@
     <title>Login</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <style>  
-      .w3-third .bigbtn {
-       border:1px solid #e3e3e3;
-       background-color:#E7E9EB;
-       color:#555;
-       margin-bottom:16px;
-       width:100%;
-       padding:20px 0;
-       text-align: center;
-       vertical-align: middle;
-       display: inline-block;
-       text-decoration:none !important;
-       border-radius:5px;
-      }
-       
-      .bigbtn:hover, .bigbtn2:hover {
-        background-color: #282A35; 
-        color: #ffffff !important;
-        border: 1px solid #555;
-      }
-      
-      @media screen and (max-width: 992px){
-      .bigbtn {
-        display: block;
-        width: 100%;
-      }
-      }
-      .ribbon-vidx {
-        width: 60px;
-        font-size:14px;
-        padding: 4px;
-        position: absolute;
-        left:-20px;
-        top:-15px;
-        text-align: center;
-        color:black;
-        border-radius:25px;
-        -ms-transform: rotate(-20deg); /* IE 9 */
-        transform: rotate(-20deg);
-      }
-      
-      .ws-yellow-hover:hover {
-        background-color:#fff080!important;
-        color:black!important;
-      }
-      
-      .ws-hover-black:hover {
-        background-color:black!important
-      }
-      
-      </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   
 
   <body>
+    <h3>Tabelas: </h3>
+    <button name="btn_disciplinas" >  <a href="/tb_disciplinas">  Disciplinas   </a></button>
+    <button name="btn_usuarios" >     <a href="/tb_usuarios">     Usuários      </a></button>
+    <button name="btn_carrinhos" >    <a href="/tb_carrinhos">    Carrinhos     </a></button>
+    <button name="btn_equipamentos">  <a href="/tb_equipamentos"> Equipamentos  </a></button>
+    <button name="btn_reservas" >     <a href="/tb_reservas">     Reservas      </a></button>
+
+    <hr>
   
     <header align="center">
       <h3>{{msg}}</h3>

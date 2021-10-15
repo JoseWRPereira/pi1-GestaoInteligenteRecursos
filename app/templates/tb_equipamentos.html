@@ -5,25 +5,7 @@
     <title>Tabela Equipamentos</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  
-  <style>
-    table {
-      font-family: arial, sans-serif;
-      border-collapse: collapse;
-      width: 100%;
-    }
-    
-    td, th {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-    }
-    
-    tr:nth-child(even) {
-      background-color: #dddddd;
-    }
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   
 
@@ -35,29 +17,31 @@
 
     <form action="/tb_equipamentos" method="POST">
       <label for="equip_npatr"> Número de Patrimônio: </label>
-      <input type="text" name="equipNumPatr" value={{editar[0][0]}}><br>
+      <input type="text" name="equipNumPatr"><br>
 
       <label for="equip_nome"> Nome: </label>
-      <input type="text" name="equipNome" value={{editar[0][1]}}><br>
+      <input type="text" name="equipNome"><br>
 
       <label for="equip_descricao"> Descrição: </label>
-      <input type="text" name="equipDescricao" value={{editar[0][2]}}><br>
+      <input type="text" name="equipDescricao" ><br>
 
-      <label for="equip_carrinho"> Carrinho: </label>
-      <input type="text" name="equipCarrinho" value={{editar[0][1]}}><br>
+      <!-- <label for="equip_carrinho"> Carrinho: </label>
+      <input type="text" name="equipCarrinho"><br> -->
+      <div class="select-block">
+        <label for="equip_carrinho"> Disciplina </label>
+        <select name="equipCarrinho" id="equipCarrinho" required>
+            <option value="">Selecione um carrinho:</option>
+            {% for c in carrinho %}
+            <option value={{c[0]}}>{{c[1]}}</option>
+            {% endfor %}
+          </select>
+      </div>
 
       <div>
         <label for="equip_aquisicao">Data da aquisição:</label>
         <input type="date" id="equipAquisicao" name="equipAquisicao">
       </div>
 
-      <div>
-        <label for="equip_ultimaManut">Data da última manutenção:</label>
-        <input type="date" id="equipUltimaManut" name="equipUltimaManut">
-      </div>
-
-      <!-- <label for="equip_status"> Status: </label>
-      <input type="text" name="equipStatus" value={{editar[0][5]}}><br> -->
       <div class="select-block">
         <label for="equip_status"> Status: </label>
         <select name="equipStatus" id="equipStatus" required>
@@ -68,8 +52,8 @@
           </select>
       </div>
 
-
       <br>
+      <button name="bt_voltar" ><a href="/login">Voltar</a></button>
       <input type="submit" value="Salvar">
     </form>
 
@@ -83,7 +67,6 @@
         <th>Carrinho</th>
         <th>Descrição</th>
         <th>Data de aquisição</th>
-        <th>Data da última manutenção</th>
         <th>Status</th>
         <th>Ações</th>
       </tr>
@@ -95,7 +78,6 @@
         <td> {{ e[3] }} </td>
         <td> {{ e[4] }} </td>
         <td> {{ e[5] }} </td>
-        <td> {{ e[6] }} </td>
         <td>
           <a href="/delequipamento/{{e[0]}}">Excluir</a>
         </td>

@@ -5,51 +5,24 @@
     <title>Tabela Carrinhos</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  
-  <style>
-    table {
-      font-family: arial, sans-serif;
-      border-collapse: collapse;
-      width: 100%;
-    }
-    
-    td, th {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-    }
-    
-    tr:nth-child(even) {
-      background-color: #dddddd;
-    }
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   
 
   <body>
   
     <header align="center">
-      <h2>Tabela de Carrinhos</h2>
+      <h3>Tabela de Carrinhos</h3>
     </header>
 
     <form action="/tb_carrinhos" method="POST">
       <label for="carrinho_id"> ID: </label>
-      <input type="text" name="carrinhoId" value={{editar[0][0]}}><br>
+      <input type="text" name="carrinhoId"><br>
 
       <label for="carrinho_nome"> Nome: </label>
-      <input type="text" name="carrinhoNome" value={{editar[0][1]}}><br>
-
-      <label for="carrinho_qtdEquip"> Qtd. Equipamentos: </label>
-      <input type="text" name="carrinhoQtdEquip" value={{editar[0][2]}}><br>
-
-      <label for="carrinho_status"> Status: </label>
-      <input type="text" name="carrinhoStatus" value={{editar[0][3]}}><br>
-
-      <label for="carrinho_obs"> Observação: </label>
-      <input type="text" name="carrinhoObs" value={{editar[0][4]}}><br>
-
+      <input type="text" name="carrinhoNome"><br>
       <br>
+      <button name="bt_voltar" ><a href="/login">Voltar</a></button>
       <input type="submit" value="Salvar">
     </form>
 
@@ -60,9 +33,7 @@
       <tr>
         <th>ID</th>
         <th>Nome</th>
-        <th>Qtd. Equipamentos</th>
-        <th>Status</th>
-        <th>Observações</th>
+        <th>Qtd. de Equipamentos</th>
         <th>Ações</th>
       </tr>
       {% for e in lista %}
@@ -70,15 +41,11 @@
         <td> {{ e[0] }} </td>
         <td> {{ e[1] }} </td>
         <td> {{ e[2] }} </td>
-        <td> {{ e[3] }} </td>
-        <td> {{ e[4] }} </td>
         <td>
           <a href="/delcarrinho/{{e[0]}}">Excluir</a>
         </td>
       </tr>
       {% endfor %}
     </table> 
-
-
   </body>
   </html>

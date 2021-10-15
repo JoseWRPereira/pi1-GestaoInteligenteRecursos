@@ -5,26 +5,8 @@
     <title>Tabela Reservas</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-      table {
-        font-family: arial, sans-serif;
-        border-collapse: collapse;
-        width: 100%;
-      }
-      
-      td, th {
-        border: 1px solid #dddddd;
-        text-align: left;
-        padding: 8px;
-      }
-      
-      tr:nth-child(even) {
-        background-color: #dddddd;
-      }
-      </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
     </head>
-  
-
   <body>
   
     <header align="center">
@@ -56,6 +38,7 @@
       </div>
 
       <br>
+      <button name="bt_voltar" ><a href="/login">Voltar</a></button>
       <input type="submit" value="Salvar">
     </form>
 
@@ -77,7 +60,6 @@
         <td> {{ e[2] }} </td>
         <td> {{ e[3] }} </td>
         <td>
-          <a href="/addreserva/{{e[0]}}">Reservar</a>
           <a href="/delreserva/{{e[0]}}">Excluir</a>
         </td>
       </tr>
