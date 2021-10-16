@@ -166,47 +166,6 @@ def manager_car(car_id):
 
 
 
-# @app.route("/add", methods=['GET', 'POST'])
-# def add():
-#     if request.method == 'POST':
-#         nome = request.form['addname']
-#         curso = request.form['addcourse']
-#         sql =  "INSERT INTO users (name, course) VALUES ('{}', '{}');".format(str(nome), str(curso))
-#         db_cmd(sql)
-#         return redirect(url_for('index'))
-#     return render_template('add.html')
-
-
-# @app.route("/delete/<row>", methods=['GET', 'POST'])
-# def delete(row):
-#     sql = "DELETE FROM users WHERE id={};".format(row)
-#     db_cmd(sql)
-#     return redirect(url_for('index'))
-
-
-# @app.route("/edit/<id>", methods=['GET', 'POST'])
-# def edit(id):
-#     if request.method == 'GET':
-#         sql = "SELECT * FROM users WHERE id={};".format(id)
-#         lista = db_cmd(sql)
-#         return render_template('edit.html', usuario=lista)
-#     if request.method == 'POST':
-#         nome = request.form['editname']
-#         curso = request.form['editcourse']
-#         sql = "UPDATE users SET name='{}', course='{}' WHERE id={};".format(nome,curso, id)
-#         db_cmd(sql)
-#         return redirect(url_for('index'))
-
-
-# @app.route("/reset")
-# def reset():
-#     sql = "DROP TABLE IF EXISTS users;"
-#     db_cmd(sql)
-#     sql = "CREATE TABLE users ( id int not null AUTO_INCREMENT, name varchar(50) not null, course varchar(5) not null, primary key (id) );"
-#     db_cmd(sql)
-#     return redirect(url_for('index'))
-
-
 
 
 ###############################################################################
