@@ -164,6 +164,11 @@ def manager_car(car_id):
     return redirect(url_for('manager'))
     
 
+@app.route("/manager/delreserva/<id>", methods=['GET', 'POST'])
+def managerdelreserva(id):
+    sql = "DELETE FROM reserva WHERE id='{}';".format(id)
+    db_cmd(sql)
+    return redirect(url_for('manager'))
 
 
 
