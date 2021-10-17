@@ -1,47 +1,33 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
- 
-  <head>
-    <title>PI1</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css" >
-  </head>
-  
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#8257E5">
 
-  <body>
-  
-    <header align="center">
-      <h2>Projeto Integrador 1</h2>
+    <title>AgendeI | Gestão Inteligente de Equipamentos</title>
+
+    <link rel="stylesheet"    type="text/css"   href="../static/css/style.css">
+    <link rel="shortcut icon" type="image/png"  href="../static/images/favicon.png">
+
+</head>
+<body>
+    <center>
+    <header>
+        <h3>Gerenciamento Inteligente de Equipamentos</h3>
     </header>
-  
-    <!-- Disciplina -->
-    <div class="select-block">
-      <label for="disciplina"> Disciplina </label>
-      <select name="disciplina" id="disciplina" required>
-          <option value="">Selecione uma Disciplina</option>
-          {% for e in ucs %}
-          <option value={{e[0]}}>{{e[1]}}</option>
-          {% endfor %}
-        </select>
-    </div>
-    <!-- Usuário: Professor(a) -->
-    <div class="select-block">
-      <label for="usuario"> Usuário </label>
-      <select name="usuario" id="usuario" required>
-          <option value="">Selecione um usuário</option>
-          {% for e in profs %}
-          <option value={{e[0]}}>{{e[1]}}</option>
-          {% endfor %}
-        </select>
-    </div>
-    <!-- Senha -->
-    <form>
-      <label for="pwd">Senha:</label>
-      <input type="password" id="pwd" name="pwd">
-      <br><br>
-      <input type="submit" value="Entrar">
-    </form> 
+      
 
-  </body>
+    <section>
+        <img class= "hero-image" src="../static/images/landing.svg" alt="Plataforma de Agendamento Inteligente">
+        <br>
+        <br>
+        <button class="bt"><a href="/prelogin">Agendarar</a></button>
+        <button class="bt"><a href="/config">Configurar</a></button>
+    </section>
+    <footer>
+    </footer>
+</center>
+</body>
+
 </html>

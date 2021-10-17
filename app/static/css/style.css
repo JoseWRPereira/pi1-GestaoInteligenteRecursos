@@ -1,3 +1,29 @@
+body {
+  padding: 0;
+  margin: 0;
+}
+
+
+.bt {
+  border:2px solid #00caa9;
+  border-radius:4px;
+  display:inline-block;
+  cursor:pointer;
+  font-family:Verdana;
+  font-weight:bold;
+  font-size:13px;
+  padding:6px 10px;
+  text-decoration:none;
+}
+.bt:hover {
+    background:linear-gradient(to bottom, #00ff9d 5%, #00f08c 100%);
+}
+.bt:active {
+  position:relative;
+  top:2px;}
+   
+
+
 
 table {
   font-family: arial, sans-serif;

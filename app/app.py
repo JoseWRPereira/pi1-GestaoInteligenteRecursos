@@ -98,12 +98,15 @@ def db_cmd(sql):
     if select > 0:
         return lista
 
-@app.route("/style.css")
-def style():
-    return render_template('style.css')
+
 
 @app.route("/")
 def index():
+    return render_template('index.html')
+
+
+@app.route("/createtables")
+def create_tables():
     sql = "CREATE TABLE IF NOT EXISTS pi1_db.disciplina( codigo varchar(6) not null, nome varchar(50) not null, primary key(codigo));"
     db_cmd(sql)
     sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(6), PRIMARY KEY(nif), FOREIGN KEY(disciplina) REFERENCES disciplina(codigo) );"
@@ -114,7 +117,11 @@ def index():
     db_cmd(sql)
     sql = "CREATE TABLE IF NOT EXISTS pi1_db.reserva( id INT NOT NULL AUTO_INCREMENT, data DATE, carrinho_id INT, usuario_id INT, PRIMARY KEY(id), FOREIGN KEY(carrinho_id) REFERENCES carrinho(id), FOREIGN KEY(usuario_id) REFERENCES usuario(nif) );"
     db_cmd(sql)
+    return redirect(url_for('prelogin'))
 
+
+@app.route("/prelogin")
+def prelogin():
     loginAcesso.set("Escolha a unidade curricular:","disciplina","SELECT codigo,nome FROM disciplina;")
     return redirect(url_for('login'))
 
@@ -170,6 +177,13 @@ def managerdelreserva(id):
     db_cmd(sql)
     return redirect(url_for('manager'))
 
+
+###############################################################################
+###      PI1_DB Configurações
+###############################################################################
+@app.route("/config", methods=['GET', 'POST'])
+def config():
+    return render_template('config.html')
 
 
 
