@@ -5,33 +5,38 @@
     <title>Login</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
   </head>
-  
 
   <body>
-    <h3>Tabelas: </h3>
-    <button name="btn_disciplinas" >  <a href="/tb_disciplinas">  Disciplinas   </a></button>
-    <button name="btn_usuarios" >     <a href="/tb_usuarios">     Usuários      </a></button>
-    <button name="btn_carrinhos" >    <a href="/tb_carrinhos">    Carrinhos     </a></button>
-    <button name="btn_equipamentos">  <a href="/tb_equipamentos"> Equipamentos  </a></button>
-    <button name="btn_reservas" >     <a href="/tb_reservas">     Reservas      </a></button>
-    
-    <hr>
-  
-    <header align="center">
-      <h3>{{msg}}</h3>
+    <header>
+      <hr class="barra">
+      <h2>Login</h2>
     </header>
-  
-    <div class="w3-row-padding" style="margin-left:16px;margin-right:16px">
 
-      {% for d in lista %}
-      <div class="w3-third">
-        <a class="bigbtn" href="/login/{{campo}}/{{d[0]}}"> {{d[1]}} </a>
-      </div>
-      {% endfor %}
-  
-    </div>
     <br>
+    <form class="formlogin" action="/loginvalidate" method="POST">
+      <label for="username">Usuário:</label>
+      <input list="browsers" name="browser">
+      <datalist id="browsers">
+        <option value="Administrador">
+        {% for u in userslist %}
+          <option value="{{u[1]}}">
+        {% endfor %}
+        <option value="Visitante">
+      </datalist>
+      <br><br>
+      <label for="pwd">Senha : </label>
+      <input type="password" id="pwd" name="pwd">
+      <br><br>
+      <!-- <input type="button" value="Acessar">
+      <input type="button" value="Voltar"> -->
+    </form> 
+    <br>
+    <footer>
+      <br>
+      <a class="bt" href="/main"> Voltar </a>
+      <a class="bt" href="/agendar"> Acessar </a>
+    </footer>
   </body>
 </html>

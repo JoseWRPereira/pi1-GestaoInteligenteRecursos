@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+ 
+  <head>
+    <title>Agendar</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+  </head>
+  
+
+  <body>
+    <header>
+      <hr class="barra">
+      <h2>Agendar</h2>
+      <!-- <h3>{{cal}}</h3> -->
+    </header>
+
+    <!-- Calendário -->
+    <!-- <form action="/manager" method="POST">
+      <label for="calendario">Calendário:</label>
+      <input type="date" id="calendario" name="calendario">
+      <input type="submit" name="gp" value="Buscar">
+      <input type="submit" name="gp" value="Voltar">
+    </form>
+    <hr> -->
+
+    <!-- <nav>
+      <ul>
+      {% for d in car %} -->
+    <!-- <div class="w3-third">
+      <a class="bigbtn" href="/manager/{{d[0]}}"> {{d[1]}} </a>
+    </div> -->
+      <!-- <li>
+      <a href="/manager/{{d[0]}}">
+        <img src="../static/images/carrinho.png" alt="Carrinho" style="width:62px;height:62px;">
+        <figcaption>{{d[1]}}</figcaption>
+      </a>
+      </li>
+    {% endfor %}
+    </ul>
+    </nav>
+ -->
+
+    <!-- <hr> -->
+    <table>
+      <tr>
+        <td><input class="seta" type="image" src="../static/images/icon/setaEsquerda.png" /></td>
+        <!-- <td><h3>{{cal}}</h3></td> -->
+        <td><h3>2021-10-21</h3></td>
+        <td><input class="seta" type="image" src="../static/images/icon/setaDireita.png" /></td>
+      </tr>
+    </table>
+
+
+    <table>
+      <thead>
+        <tr>
+          <!-- <td id="sem_borda"></td> -->
+          <!-- <th>ID</th> -->
+          <!-- <th>Data</th> -->
+          <th>Carrinho</th>
+          <th>Usuário</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in lista %}
+        <tr>
+          <!-- <td> {{ e[0] }} </td> -->
+          <!-- <td> {{ e[1] }} </td> -->
+          <td> {{ e[2] }} </td>
+          <td> {{ e[3] }} </td>
+          <td>
+            {% if e[3] == user %}
+            <a href="/main/detalhes/{{e[0]}}">Detalhes</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <footer>
+      <br>
+      <a class="bt" href="/main"> Voltar </a>
+      <a class="bt" href="/gerenciar"> Gerenciar </a>
+    </footer>
+  </body>
+</html>

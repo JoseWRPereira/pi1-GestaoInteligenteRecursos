@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+ 
+  <head>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+  </head>
+  
+
+  <body>
+    <!-- <h3>Tabelas: </h3>
+    <button name="btn_disciplinas" >  <a href="/tb_disciplinas">  Disciplinas   </a></button>
+    <button name="btn_usuarios" >     <a href="/tb_usuarios">     Usuários      </a></button>
+    <button name="btn_carrinhos" >    <a href="/tb_carrinhos">    Carrinhos     </a></button>
+    <button name="btn_equipamentos">  <a href="/tb_equipamentos"> Equipamentos  </a></button>
+    <button name="btn_reservas" >     <a href="/tb_reservas">     Reservas      </a></button>
+    
+    <hr> -->
+  
+    <header>
+      <center><h3>{{msg}}</h3></center>
+    </header>
+  
+    <center>
+    <form action="/login" method="POST">
+      {% for d in lista %}
+      <a class="bt" href="/login/{{campo}}/{{d[0]}}" > {{d[1]}} </a>
+      <br>
+      {% endfor %}
+      <br>
+      <a class="bt" href="/"> Voltar </a>
+    </form>
+    </center>
+
+    <br>
+  </body>
+</html>
