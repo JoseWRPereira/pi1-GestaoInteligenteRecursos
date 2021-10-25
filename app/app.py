@@ -5,6 +5,8 @@ from flask.templating import render_template_string
 import mariadb
 import sys
 # import json
+from datetime import datetime
+
 
 
 ###############################################################################
@@ -191,7 +193,10 @@ def createtables():
 
 @app.route("/main")
 def main():
-    return render_template('main.html')
+    data = datetime.today().strftime('%Y-%m-%d')
+    sql = "SELECT * FROM reserva;"
+    lista = db_cmd(sql)
+    return render_template('main.html', lista=lista, data=data  )
 
 @app.route("/login")
 def login():
