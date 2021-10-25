@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+ 
+  <head>
+    <title>Tabela de carrinhos</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
+  </head>
+
+  <body>
+    <header>
+      <hr class="barra">
+      <h2>Tabela de carrinhos</h2>
+    </header>
+
+    <form class="formlogin" action="/gerenciar/carrinhos" method="POST">
+      <label for="carrinho_id"> ID: </label>
+      <input type="text" name="carrinhoId"><br>
+
+      <label for="carrinho_nome"> Nome: </label>
+      <input type="text" name="carrinhoNome"><br>
+      <br><br>
+      <input type="submit" value="Salvar">
+    </form>
+
+
+
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Ações</th>
+          </tr>
+      </thead>
+      <tbody>
+        {% for campo in lista %}
+        <tr>
+          <td> {{ campo[0] }} </td>
+          <td> {{ campo[1] }} </td>
+          <td>
+            <a href="/gerenciar/carrinhos/del/{{campo[0]}}">Excluir</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+
+    <br>
+    <footer>
+      <br>
+      <a class="bt" href="/gerenciar"> Voltar </a>
+    </footer>
+  </body>
+</html>

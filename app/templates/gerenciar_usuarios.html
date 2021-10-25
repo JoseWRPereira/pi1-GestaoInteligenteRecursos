@@ -24,8 +24,8 @@
       <label for="usuario_usuarioDisciplina"> Disciplina: </label>
       <input list="browsers" name="usuarioDisciplina">
       <datalist id="browsers">
-        {% for e in ucs %}
-        <option value={{e[1]}}>
+        {% for d in discip %}
+        <option value={{d[0]}}>{{d[1]}}
         {% endfor %}
       </datalist>
       <br><br>

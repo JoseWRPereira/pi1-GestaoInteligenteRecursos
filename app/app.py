@@ -68,29 +68,29 @@ class Usuario:
         self.nome = nome
     def set_disciplina(self,disciplina):
         self.disciplina = disciplina
-    def get_nif(self, nif):
-        self.nif = nif
-    def get_nome(self,nome):
-        self.nome = nome
-    def get_disciplina(self,disciplina):
-        self.disciplina = disciplina
+    def get_nif(self):
+        return(self.nif)
+    def get_nome(self):
+        return(self.nome)
+    def get_disciplina(self):
+        return(self.disciplina)
 
 class Carrinho:
     def _init__(self):
         self.id=0
         self.nome = ""
-        self.qtd_equipamentos
+        self.qtd_equipamentos = 0
     def set_id(self, id):
         self.id = id
     def set_nome(self, nome):
         self.nome = nome
     def set_qtd_equipamentos(self, qtd):
         self.qtd_equipamentos = qtd
-    def get_id(self, id):
+    def get_id(self):
         return(self.id)
-    def get_nome(self, nome):
+    def get_nome(self):
         return(self.nome)
-    def get_qtd_equipamentos(self, qtd):
+    def get_qtd_equipamentos(self):
         return(self.qtd_equipamentos)
         
 class Equipamento:# np, nome, carrinho, descricao, adquirido_em, status
@@ -107,11 +107,11 @@ class Equipamento:# np, nome, carrinho, descricao, adquirido_em, status
         self.nome = nome
     def set_carrinho(self,carrinho):
         self.carrinho = carrinho
-    def get_np(self,np):
+    def get_np(self):
         return(self.np)
-    def get_nome(self,nome):
+    def get_nome(self):
         return(self.nome)
-    def get_carrinho(self,carrinho):
+    def get_carrinho(self):
         return(self.carrinho)
 
 
@@ -126,11 +126,11 @@ class Reserva:#( id, data, carrinho_id, usuario_id
         self.carrinho_id = carrinho
     def set_usuario_id(self,usuario):
         self.usuario_id = usuario
-    def get_data(self,data):
+    def get_data(self):
         return(self.data)
-    def get_carrinho_id(self,carrinho):
+    def get_carrinho_id(self):
         return(self.carrinho_id)
-    def get_usuario_id(self,usuario):
+    def get_usuario_id(self):
         return(self.usuario_id)
     
 
@@ -169,16 +169,16 @@ def index():
 
 @app.route("/createtables")
 def createtables():
-    # sql = "CREATE TABLE IF NOT EXISTS pi1_db.disciplina( codigo varchar(6) not null, nome varchar(50) not null, primary key(codigo));"
-    # db_cmd(sql)
-    # sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(6), PRIMARY KEY(nif), FOREIGN KEY(disciplina) REFERENCES disciplina(codigo) );"
-    # db_cmd(sql)
-    # sql = "CREATE TABLE IF NOT EXISTS pi1_db.carrinho( id INT NOT NULL, nome VARCHAR(16) NOT NULL, qtd_equipamentos INT, PRIMARY KEY(id));"
-    # db_cmd(sql)
-    # sql = "CREATE TABLE IF NOT EXISTS pi1_db.equipamento( np INT NOT NULL, nome VARCHAR(20) NOT NULL, carrinho INT, descricao VARCHAR(50), adquirido_em DATE, status VARCHAR(16), PRIMARY KEY(np));"
-    # db_cmd(sql)
-    # sql = "CREATE TABLE IF NOT EXISTS pi1_db.reserva( id INT NOT NULL AUTO_INCREMENT, data DATE, carrinho_id INT, usuario_id INT, PRIMARY KEY(id), FOREIGN KEY(carrinho_id) REFERENCES carrinho(id), FOREIGN KEY(usuario_id) REFERENCES usuario(nif) );"
-    # db_cmd(sql)
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.disciplina( codigo varchar(6) not null, nome varchar(50) not null, primary key(codigo));"
+    db_cmd(sql)
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(6), PRIMARY KEY(nif), FOREIGN KEY(disciplina) REFERENCES disciplina(codigo) );"
+    db_cmd(sql)
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.carrinho( id INT NOT NULL, nome VARCHAR(16) NOT NULL, qtd_equipamentos INT, PRIMARY KEY(id));"
+    db_cmd(sql)
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.equipamento( np INT NOT NULL, nome VARCHAR(20) NOT NULL, carrinho INT, descricao VARCHAR(50), adquirido_em DATE, status VARCHAR(16), PRIMARY KEY(np));"
+    db_cmd(sql)
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.reserva( id INT NOT NULL AUTO_INCREMENT, data DATE, carrinho_id INT, usuario_id INT, PRIMARY KEY(id), FOREIGN KEY(carrinho_id) REFERENCES carrinho(id), FOREIGN KEY(usuario_id) REFERENCES usuario(nif) );"
+    db_cmd(sql)
     return redirect(url_for('main'))
 
 
@@ -214,9 +214,10 @@ def gerenciar():
 
 ###############################################################################
 ######################################################### Gerenciar disciplinas
+################################################################ (codigo), nome
 ###############################################################################
 @app.route("/gerenciar/disciplinas", methods=['GET','POST'])
-def gerenciardisciplinas():
+def gerenciardisciplinas(): 
     if request.method == 'POST':
         disciplina.set_codigo(request.form['disciplinaCodigo'])
         disciplina.set_nome(request.form['disciplinaNome'])
@@ -228,7 +229,7 @@ def gerenciardisciplinas():
         return render_template('gerenciar_disciplinas.html', lista=lista  )
 
 @app.route("/gerenciar/disciplinas/add")
-def gerenciardisciplinasadd():
+def gerenciardisciplinasadd():  
     sql =  "INSERT INTO disciplina (codigo, nome) VALUES ('{}', '{}');".format(str(disciplina.get_codigo()), str(disciplina.get_nome()))
     db_cmd(sql)
     return redirect(url_for('gerenciardisciplinas'))
@@ -245,10 +246,11 @@ def gerenciardisciplinasdel(codigo):
 
 ###############################################################################
 ############################################################ Gerenciar usuarios
+################################# (nif), nome, [disciplina]->disciplina(codigo)
 ###############################################################################
 
 @app.route("/gerenciar/usuarios", methods=['GET','POST'])
-def gerenciarusuarios(): # ucs, lista : usuarioNIF,nome,disciplina
+def gerenciarusuarios():
     if request.method == 'POST':
         usuario.set_nif(request.form['usuarioNIF'])
         usuario.set_nome(request.form['usuarioNome'])
@@ -256,10 +258,10 @@ def gerenciarusuarios(): # ucs, lista : usuarioNIF,nome,disciplina
         return redirect(url_for('gerenciarusuariosadd'))
     else:
         sql = "SELECT * FROM disciplina;"
-        ucs = db_cmd(sql)
+        discip = db_cmd(sql)
         sql = "SELECT * FROM usuario;"
         lista = db_cmd(sql)
-        return render_template('gerenciar_usuarios.html', lista=lista, ucs=ucs )
+        return render_template('gerenciar_usuarios.html', lista=lista, discip=discip )
 
 @app.route("/gerenciar/usuarios/add")
 def gerenciarusuariosadd():
@@ -276,51 +278,129 @@ def gerenciarusuariosdel(codigo):
 
 
 
-# @app.route("/tb_usuarios", methods=['GET', 'POST'])
-# def tb_usuarios():
-#     sql = "SELECT * FROM disciplina;"
-#     ucs = db_cmd(sql)
-#     if request.method == 'POST':
-#         nif = request.form['usuarioNIF']
-#         nome = request.form['usuarioNome']
-#         disciplina = request.form['usuarioDisciplina']
-#         sql =  "INSERT INTO usuario (nif, nome, disciplina) VALUES ('{}','{}','{}');".format(str(nif), str(nome), str(disciplina) )
-#         db_cmd(sql)
-#         return redirect(url_for('tb_usuarios'))
-#     sql = "SELECT * FROM usuario;"
-#     lista = db_cmd(sql)
-#     return render_template('tb_usuarios.html', lista=lista, ucs=ucs)
 
-# @app.route("/delusuario/<nif>", methods=['GET', 'POST'])
-# def delusuario(nif):
-#     sql = "DELETE FROM usuario WHERE nif='{}';".format(nif)
-#     db_cmd(sql)
-#     return redirect(url_for('tb_usuarios'))
-
-
-
-
-
-
-
-@app.route("/gerenciar/carrinhos")
+###############################################################################
+########################################################### Gerenciar carrinhos
+################################################## (id), nome, qtd_equipamentos
+###############################################################################
+@app.route("/gerenciar/carrinhos", methods=['GET','POST'])
 def gerenciarcarrinhos():
-    return render_template('gerenciar_carrinhos.html')
+    if request.method == 'POST':
+        carrinho.set_id(request.form['carrinhoId'])
+        carrinho.set_nome(request.form['carrinhoNome'])
+        return redirect(url_for('gerenciarcarrinhosadd'))
+    else:
+        sql = "SELECT * FROM carrinho;"
+        lista = db_cmd(sql)
+        return render_template('gerenciar_carrinhos.html', lista=lista )
 
-@app.route("/gerenciar/equipamentos")
+@app.route("/gerenciar/carrinhos/add")
+def gerenciarcarrinhosadd():
+    sql =  "INSERT INTO carrinho (id, nome) VALUES ('{}','{}');".format(str(carrinho.get_id() ), str(carrinho.get_nome()))
+    db_cmd(sql)
+    return redirect(url_for('gerenciarcarrinhos'))
+
+@app.route("/gerenciar/carrinhos/del/<id>", methods=['GET', 'POST'])
+def gerenciarcarrinhosdel(id):
+    sql = "DELETE FROM carrinho WHERE id='{}';".format(id)
+    db_cmd(sql)
+    return redirect(url_for('gerenciarcarrinhos'))
+
+
+
+
+
+###############################################################################
+######################################################## Gerenciar equipamentos
+######################### (np), nome, carrinho, descricao, adquirido_em, status
+###############################################################################
+@app.route("/gerenciar/equipamentos", methods=['GET','POST'])
 def gerenciarequipamentos():
-    return render_template('gerenciar_equipamentos.html')
+    if request.method == 'POST':
+        equipamento.set_np(request.form['equipNumPatr'])
+        equipamento.set_nome(request.form['equipNome'])
+        equipamento.set_carrinho(request.form['equipCarrinho'])
+        return redirect(url_for('gerenciarequipamentosadd'))
+    else:
+        sql = "SELECT * FROM carrinho;"
+        carrinho = db_cmd(sql)
+        sql = "SELECT * FROM equipamento;"
+        lista = db_cmd(sql)
+        return render_template('gerenciar_equipamentos.html', lista=lista, carrinho=carrinho)
 
-@app.route("/gerenciar/reservas")
+@app.route("/gerenciar/equipamentos/add")
+def gerenciarequipamentosadd():
+    sql =  "INSERT INTO equipamento (np, nome, carrinho) VALUES ('{}','{}','{}');".format(str(equipamento.get_np()), str(equipamento.get_nome()), str(equipamento.get_carrinho()) )
+    db_cmd(sql)
+    return redirect(url_for('gerenciarequipamentos'))
+
+@app.route("/gerenciar/equipamentos/del/<id>", methods=['GET', 'POST'])
+def gerenciarequipamentosdel(id):
+    sql = "DELETE FROM equipamento WHERE np='{}';".format(id)
+    db_cmd(sql)
+    return redirect(url_for('gerenciarequipamentos'))
+
+
+
+
+
+###############################################################################
+############################################################ Gerenciar reservas
+############### (id), data, carrinho_id->carrinho(id), usuario_id->usuario(nif)
+###############################################################################
+@app.route("/gerenciar/reservas", methods=['GET','POST'])
 def gerenciarreservas():
-    return render_template('gerenciar_reservas.html')
+    if request.method == 'POST':
+        reserva.set_data(request.form['calendario'])
+        reserva.set_carrinho_id(request.form['carrinho'])
+        reserva.set_usuario_id(request.form['usuario'])
+        return redirect(url_for('gerenciarreservasadd'))
+    else:
+        sql = "SELECT id,nome FROM carrinho;"
+        carrinho = db_cmd(sql)
+        sql = "SELECT nif,nome FROM usuario;"
+        usuario = db_cmd(sql)
+        sql = "SELECT * FROM reserva;"
+        lista = db_cmd(sql)
+        return render_template('gerenciar_reservas.html', lista=lista, carrinho=carrinho, usuario=usuario)
 
+@app.route("/gerenciar/reservas/add")
+def gerenciarreservasadd():
+    sql =  "INSERT INTO reserva (data, carrinho_id, usuario_id) VALUES ('{}','{}','{}');".format(str(reserva.get_data()), str(reserva.get_carrinho_id()), str(reserva.get_usuario_id()) )
+    db_cmd(sql)
+    return redirect(url_for('gerenciarreservas'))
+
+@app.route("/gerenciar/reservas/del/<id>", methods=['GET', 'POST'])
+def gerenciarreservasdel(id):
+    sql = "DELETE FROM reserva WHERE id='{}';".format(id)
+    db_cmd(sql)
+    return redirect(url_for('gerenciarreservas'))
 
 
 
 ###############################################################################
+######################################################## PI1_DB DROP ALL TABLES
+###############################################################################
+@app.route("/dropalltables")
+def dropalltables():
+    sql = "DROP TABLE IF EXISTS reserva;"
+    db_cmd(sql)
+    sql = "DROP TABLE IF EXISTS equipamento;"
+    db_cmd(sql)
+    sql = "DROP TABLE IF EXISTS carrinho;"
+    db_cmd(sql)
+    sql = "DROP TABLE IF EXISTS usuario;"
+    db_cmd(sql)
+    sql = "DROP TABLE IF EXISTS disciplina;"
+    db_cmd(sql)
+    return redirect(url_for('createtables'))
+
 ###############################################################################
 ###############################################################################
+
+
+
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
@@ -328,322 +408,3 @@ if __name__ == '__main__':
 ###############################################################################
 ###############################################################################
 ###############################################################################
-
-
-
-
-
-# class Calendario:
-#     def __init__(self):
-#         self.data = ""
-#     def set(self, dt ):
-#         self.data = dt
-#     def get(self):
-#         return(self.data)
-
-# class Carrinho:
-#     def __init__(self):
-#         self.carrinho = ""
-#     def set(self, lista ):
-#         self.carrinho = lista
-#     def get(self):
-#         return(self.carrinho)
-
-# class Acesso:
-#     def __init__(self):
-#         self.uc = ''
-#         self.user = ''
-#         self.pwd = ''
-#     def set_uc(self, uc):
-#         self.uc = uc
-#     def set_user(self, user):
-#         self.user = user
-#     def set_pwd(self,pwd):
-#         self.pwd = pwd
-#     def get_uc(self):
-#         return(self.uc)
-#     def get_user(self):
-#         return(self.user)
-#     def get_pwd(self):
-#         return(self.pwd)
-
-# class LoginAcesso:
-#     def __init__(self):
-#         self.msg = ""
-#         self.campo = ""
-#         self.sql = ""
-#     def set(self, m,c,s):
-#         self.msg = m
-#         self.campo = c
-#         self.sql = s
-#     def get_msg(self):
-#         return(self.msg)
-#     def get_campo(self):
-#         return(self.campo)
-#     def get_sql(self):
-#         return(self.sql)
-
-
-
-
-
-
-
-
-
-
-# car = Carrinho()
-# cal = Calendario()
-# acesso = Acesso()
-# loginAcesso = LoginAcesso()
-
-
-
-
-# @app.route("/", methods=['GET','POST'])
-# def index():
-#     if request.method == 'POST':
-#         botao = request.form['botao']
-#         if botao == 'Agendar':
-#             return redirect(url_for('create_tables'))
-#         else:
-#             return redirect(url_for('config'))
-#     return render_template('index.html')
-
-
-# @app.route("/createtables")
-# def create_tables():
-#     sql = "CREATE TABLE IF NOT EXISTS pi1_db.disciplina( codigo varchar(6) not null, nome varchar(50) not null, primary key(codigo));"
-#     db_cmd(sql)
-#     sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(6), PRIMARY KEY(nif), FOREIGN KEY(disciplina) REFERENCES disciplina(codigo) );"
-#     db_cmd(sql)
-#     sql = "CREATE TABLE IF NOT EXISTS pi1_db.carrinho( id INT NOT NULL, nome VARCHAR(16) NOT NULL, qtd_equipamentos INT, PRIMARY KEY(id));"
-#     db_cmd(sql)
-#     sql = "CREATE TABLE IF NOT EXISTS pi1_db.equipamento( np INT NOT NULL, nome VARCHAR(20) NOT NULL, carrinho INT, descricao VARCHAR(50), adquirido_em DATE, status VARCHAR(16), PRIMARY KEY(np));"
-#     db_cmd(sql)
-#     sql = "CREATE TABLE IF NOT EXISTS pi1_db.reserva( id INT NOT NULL AUTO_INCREMENT, data DATE, carrinho_id INT, usuario_id INT, PRIMARY KEY(id), FOREIGN KEY(carrinho_id) REFERENCES carrinho(id), FOREIGN KEY(usuario_id) REFERENCES usuario(nif) );"
-#     db_cmd(sql)
-#     return redirect(url_for('prelogin'))
-
-
-# @app.route("/prelogin")
-# def prelogin():
-#     loginAcesso.set("Escolha a unidade curricular:","disciplina","SELECT codigo,nome FROM disciplina;")
-#     return redirect(url_for('login'))
-
-
-# @app.route("/login")
-# def login():
-#     lista = db_cmd(loginAcesso.get_sql())
-#     return render_template('login.html', msg=loginAcesso.get_msg(), campo=loginAcesso.get_campo(), lista=lista )
-
-# @app.route("/login/disciplina/<uc>")
-# def login_disciplina(uc):
-#     acesso.set_uc( uc )
-#     loginAcesso.set("Escolha o usuário de acesso:","usuario","SELECT nif,nome FROM usuario WHERE disciplina='{}';".format(acesso.get_uc()))
-#     return redirect(url_for('login'))
-
-# @app.route("/login/usuario/<nif>")
-# def login_usuario(nif):
-#     acesso.set_user(nif)
-#     return redirect(url_for('loginsenha'))
-
-# @app.route("/loginsenha", methods=['GET','POST'])
-# def loginsenha():
-#     if request.method == 'POST':
-#         acesso.set_pwd(request.form['pwd'])
-#         return redirect(url_for('manager'))
-#     return render_template('loginsenha.html');
-
-
-
-# @app.route("/manager", methods=['GET', 'POST'])
-# def manager():
-#     sql = "SELECT * FROM reserva WHERE data=CURDATE();"
-#     lista = db_cmd(sql)
-#     # imp = ""
-#     # cal.set(lista[1])
-#     if request.method == 'POST':
-#         cal.set(request.form['calendario'])
-#         sql =  "SELECT * FROM reserva WHERE data='{}' ORDER BY carrinho_id;".format( cal.get() )
-#         lista = db_cmd(sql)
-#         sql = "SELECT id,nome FROM carrinho WHERE id NOT IN (SELECT carrinho_id FROM reserva where data='{}' ORDER BY carrinho_id);".format(cal.get())
-#         car.set( db_cmd(sql) )
-#     return render_template('manager.html', lista=lista, car=car.get(), cal=cal.get(), user=acesso.get_user())
-
-# @app.route("/manager/<car_id>")
-# def manager_car(car_id):
-#     sql =  "INSERT INTO reserva (data, carrinho_id, usuario_id) VALUES ('{}', '{}', '{}');".format(cal.get(), car_id, acesso.get_user())
-#     db_cmd(sql)
-#     return redirect(url_for('manager'))
-    
-
-# @app.route("/manager/delreserva/<id>", methods=['GET', 'POST'])
-# def managerdelreserva(id):
-#     sql = "DELETE FROM reserva WHERE id='{}';".format(id)
-#     db_cmd(sql)
-#     return redirect(url_for('manager'))
-
-
-# ###############################################################################
-# ###      PI1_DB Configurações
-# ###############################################################################
-# @app.route("/config", methods=['GET', 'POST'])
-# def config():
-#     return render_template('config.html')
-
-
-
-# ###############################################################################
-# ###      PI1_DB Disciplinas
-# ###############################################################################
-
-# @app.route("/tb_disciplinas", methods=['GET', 'POST'])
-# def tb_disciplinas():
-#     editar = ['','']
-#     if request.method == 'POST':
-#         codigo = request.form['disciplinaCodigo']
-#         nome = request.form['disciplinaNome']
-#         sql =  "INSERT INTO disciplina (codigo, nome) VALUES ('{}', '{}');".format(str(codigo), str(nome))
-#         db_cmd(sql)
-#         return redirect(url_for('tb_disciplinas'))
-#     sql = "SELECT * FROM disciplina;"
-#     lista = db_cmd(sql)
-#     return render_template('tb_disciplinas.html', lista=lista, editar=editar)
-
-# @app.route("/deldisciplina/<codigo>", methods=['GET', 'POST'])
-# def deldisciplina(codigo):
-#     sql = "DELETE FROM disciplina WHERE codigo='{}';".format(codigo)
-#     db_cmd(sql)
-#     return redirect(url_for('tb_disciplinas'))
-
-
-
-# ###############################################################################
-# ###      PI1_DB Usuarios
-# ###############################################################################
-
-# @app.route("/tb_usuarios", methods=['GET', 'POST'])
-# def tb_usuarios():
-#     sql = "SELECT * FROM disciplina;"
-#     ucs = db_cmd(sql)
-#     if request.method == 'POST':
-#         nif = request.form['usuarioNIF']
-#         nome = request.form['usuarioNome']
-#         disciplina = request.form['usuarioDisciplina']
-#         sql =  "INSERT INTO usuario (nif, nome, disciplina) VALUES ('{}','{}','{}');".format(str(nif), str(nome), str(disciplina) )
-#         db_cmd(sql)
-#         return redirect(url_for('tb_usuarios'))
-#     sql = "SELECT * FROM usuario;"
-#     lista = db_cmd(sql)
-#     return render_template('tb_usuarios.html', lista=lista, ucs=ucs)
-
-# @app.route("/delusuario/<nif>", methods=['GET', 'POST'])
-# def delusuario(nif):
-#     sql = "DELETE FROM usuario WHERE nif='{}';".format(nif)
-#     db_cmd(sql)
-#     return redirect(url_for('tb_usuarios'))
-
-
-
-# ###############################################################################
-# ###      PI1_DB Carrinhos
-# ###############################################################################
-
-# @app.route("/tb_carrinhos", methods=['GET', 'POST'])
-# def tb_carrinhos():
-#     if request.method == 'POST':
-#         id = request.form['carrinhoId']
-#         nome = request.form['carrinhoNome']
-#         sql =  "INSERT INTO carrinho (id, nome) VALUES ('{}','{}');".format(str(id), str(nome) )
-#         db_cmd(sql)
-#         return redirect(url_for('tb_carrinhos'))
-#     sql = "SELECT * FROM carrinho;"
-#     lista = db_cmd(sql)
-#     return render_template('tb_carrinhos.html', lista=lista)
-
-# @app.route("/delcarrinho/<id>", methods=['GET', 'POST'])
-# def delcarrinho(id):
-#     sql = "DELETE FROM carrinho WHERE id='{}';".format(id)
-#     db_cmd(sql)
-#     return redirect(url_for('tb_carrinhos'))
-
-
-# ###############################################################################
-# ###      PI1_DB Equipamentos
-# ###############################################################################
-
-# @app.route("/tb_equipamentos", methods=['GET', 'POST'])
-# def tb_equipamentos():
-#     if request.method == 'POST':
-#         np = request.form['equipNumPatr']
-#         nome = request.form['equipNome']
-#         car = request.form['equipCarrinho']
-#         descricao = request.form['equipDescricao']
-#         aquisicao = request.form['equipAquisicao']
-#         status = request.form['equipStatus']
-#         sql =  "INSERT INTO equipamento (np, nome, carrinho, descricao, adquirido_em, status) VALUES ('{}','{}','{}','{}','{}','{}');".format(str(np), str(nome), str(car), str(descricao), str(aquisicao), str(status) )
-#         db_cmd(sql)
-#         return redirect(url_for('tb_equipamentos'))
-#     sql = "SELECT * FROM equipamento;"
-#     lista = db_cmd(sql)
-#     sql = "SELECT id,nome FROM carrinho;"
-#     carrinho = db_cmd(sql)
-#     return render_template('tb_equipamentos.html', lista=lista, carrinho=carrinho)
-
-# @app.route("/delequipamento/<np>", methods=['GET', 'POST'])
-# def delequipamento(np):
-#     sql = "DELETE FROM equipamento WHERE np='{}';".format(np)
-#     db_cmd(sql)
-#     return redirect(url_for('tb_equipamentos'))
-
-
-
-
-# ###############################################################################
-# ###      PI1_DB Reservas
-# ###############################################################################
-
-# @app.route("/tb_reservas", methods=['GET', 'POST'])
-# def tb_reservas():
-#     if request.method == 'POST':
-#         cal_ = request.form['calendario']
-#         car_ = request.form['carrinho']
-#         usr_ = request.form['usuario']
-#         sql =  "INSERT INTO reserva (data, carrinho_id, usuario_id) VALUES ('{}','{}','{}');".format(str(cal_), str(car_), str(usr_))
-#         db_cmd(sql)
-#         return redirect(url_for('tb_reservas'))
-#     sql = "SELECT * FROM carrinho;"
-#     car = db_cmd(sql)
-#     sql = "SELECT * FROM usuario;"
-#     usr = db_cmd(sql)
-#     sql = "SELECT * FROM reserva;"
-#     lista = db_cmd(sql)
-#     return render_template('tb_reservas.html', lista=lista, car=car, usr=usr )
-
-# @app.route("/delreserva/<id>", methods=['GET', 'POST'])
-# def delreserva(id):
-#     sql = "DELETE FROM reserva WHERE id='{}';".format(id)
-#     db_cmd(sql)
-#     return redirect(url_for('tb_reservas'))
-
-# ###############################################################################
-# ###      PI1_DB DROP ALL TABLES
-# ###############################################################################
-# @app.route("/dropalltables")
-# def dropalltables():
-#     sql = "DROP TABLE IF EXISTS reserva;"
-#     db_cmd(sql)
-#     sql = "DROP TABLE IF EXISTS equipamento;"
-#     db_cmd(sql)
-#     sql = "DROP TABLE IF EXISTS carrinho;"
-#     db_cmd(sql)
-#     sql = "DROP TABLE IF EXISTS usuario;"
-#     db_cmd(sql)
-#     sql = "DROP TABLE IF EXISTS disciplina;"
-#     db_cmd(sql)
-#     return redirect(url_for('login'))
-
-###############################################################################
-###############################################################################
-
