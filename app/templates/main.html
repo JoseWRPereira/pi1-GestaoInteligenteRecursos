@@ -19,9 +19,13 @@
 
     <table>
       <tr>
-        <td><input class="seta" type="image" src="../static/images/icon/setaEsquerda.png" /></td>
+        <form action="/main/datadec" method="POST">
+          <td><input type="image" class="seta" name="seta" value="esquerda" src="../static/images/icon/setaEsquerda.png" ></td>
+        </form>
         <td><h3>{{data}}</h3></td>
-        <td><input class="seta" type="image" src="../static/images/icon/setaDireita.png" /></td>
+        <form action="/main/datainc" method="POST">
+          <td><input type="image" class="seta" name="seta" value="direita" src="../static/images/icon/setaDireita.png" ></td>
+        </form>
       </tr>
     </table>
 

@@ -5,7 +5,7 @@ from flask.templating import render_template_string
 import mariadb
 import sys
 # import json
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 
 
@@ -136,8 +136,16 @@ class Reserva:#( id, data, carrinho_id, usuario_id
         return(self.usuario_id)
     
 
-
-
+class Calendario:
+    def __init__(self):
+        self.data = date.today()
+        self.delta = 0
+    def set_delta(self, delta):
+        self.delta = delta
+    def get_delta(self):
+        return(self.delta)
+    def get_data(self):
+        return(self.data + timedelta(days = self.delta))
 
 ###############################################################################
 ################################################################ Instanciamento
@@ -148,7 +156,7 @@ usuario = Usuario()
 carrinho = Carrinho()
 equipamento = Equipamento()
 reserva = Reserva()
-
+calendario = Calendario()
 
 
 
@@ -193,10 +201,24 @@ def createtables():
 
 @app.route("/main")
 def main():
-    data = datetime.today().strftime('%Y-%m-%d')
+    data = calendario.get_data()
     sql = "SELECT * FROM reserva;"
     lista = db_cmd(sql)
     return render_template('main.html', lista=lista, data=data  )
+
+@app.route("/main/datadec", methods=['GET','POST'])
+def maindatadec():
+    calendario.set_delta( calendario.get_delta()-1 )
+    return redirect(url_for('main'))
+
+
+@app.route("/main/datainc", methods=['GET','POST'])
+def maindatainc():
+    calendario.set_delta( calendario.get_delta()+1 )
+    return redirect(url_for('main'))
+
+
+
 
 @app.route("/login")
 def login():
