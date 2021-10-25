@@ -202,7 +202,7 @@ def createtables():
 @app.route("/main")
 def main():
     data = calendario.get_data()
-    sql = "SELECT * FROM reserva;"
+    sql = "SELECT * FROM reserva WHERE data='{}';".format(data)
     lista = db_cmd(sql)
     return render_template('main.html', lista=lista, data=data  )
 
