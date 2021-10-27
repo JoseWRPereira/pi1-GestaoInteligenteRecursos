@@ -15,28 +15,24 @@
     </header>
 
     <br>
-    <form class="formlogin" action="/loginvalidate" method="POST">
-      <label for="username">Usuário:</label>
+    <form class="formlogin" action="/login/validar" method="POST">
+    <label for="username">Usuário:</label>
       <input list="browsers" name="browser">
       <datalist id="browsers">
-        <option value="Administrador">
-        {% for u in userslist %}
+        {% for u in user %}
           <option value="{{u[1]}}">
         {% endfor %}
-        <option value="Visitante">
       </datalist>
       <br><br>
       <label for="pwd">Senha : </label>
       <input type="password" id="pwd" name="pwd">
       <br><br>
-      <!-- <input type="button" value="Acessar">
-      <input type="button" value="Voltar"> -->
+      <button type="submit" class="bt"> Acessar
     </form> 
     <br>
     <footer>
       <br>
-      <a class="bt" href="/main"> Voltar </a>
-      <a class="bt" href="/agendar"> Acessar </a>
+      <a class="bt" href="/main"> Voltar</a>
     </footer>
   </body>
 </html>

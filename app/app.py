@@ -64,18 +64,23 @@ class Usuario:
         self.nif = 0
         self.nome = ""
         self.disciplina = ""
+        self.senha = ""
     def set_nif(self, nif):
         self.nif = nif
     def set_nome(self,nome):
         self.nome = nome
     def set_disciplina(self,disciplina):
         self.disciplina = disciplina
+    def set_senha(self,senha):
+        self.senha = senha
     def get_nif(self):
         return(self.nif)
     def get_nome(self):
         return(self.nome)
     def get_disciplina(self):
         return(self.disciplina)
+    def get_senha(self):
+        return(self.senha)
 
 class Carrinho:
     def _init__(self):
@@ -147,6 +152,27 @@ class Calendario:
     def get_data(self):
         return(self.data + timedelta(days = self.delta))
 
+class Acesso:
+    def __init__(self):
+        self.usuario = "Administrador"
+        self.nif = 0
+        self.pwd = 0
+    def get_usuario(self):
+        return(self.usuario)
+    def set_usuario(self,user):
+        self.usuario = user
+    def get_nif(self):
+        return(self.nif)
+    def set_nif(self,nif):
+        self.nif = nif
+    def get_pwd(self):
+        return(self.pwd)
+    def set_pwd(self,pwd):
+        self.pwd = pwd
+
+
+
+
 ###############################################################################
 ################################################################ Instanciamento
 ###############################################################################
@@ -157,7 +183,7 @@ carrinho = Carrinho()
 equipamento = Equipamento()
 reserva = Reserva()
 calendario = Calendario()
-
+acesso = Acesso()
 
 
 
@@ -181,7 +207,7 @@ def index():
 def createtables():
     sql = "CREATE TABLE IF NOT EXISTS pi1_db.disciplina( codigo varchar(6) not null, nome varchar(50) not null, primary key(codigo));"
     db_cmd(sql)
-    sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(6), PRIMARY KEY(nif), FOREIGN KEY(disciplina) REFERENCES disciplina(codigo) );"
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.usuario( nif INT NOT NULL, nome VARCHAR(50) NOT NULL, disciplina VARCHAR(6), senha VARCHAR(50), PRIMARY KEY(nif), FOREIGN KEY(disciplina) REFERENCES disciplina(codigo) );"
     db_cmd(sql)
     sql = "CREATE TABLE IF NOT EXISTS pi1_db.carrinho( id INT NOT NULL, nome VARCHAR(16) NOT NULL, qtd_equipamentos INT, PRIMARY KEY(id));"
     db_cmd(sql)
@@ -189,6 +215,11 @@ def createtables():
     db_cmd(sql)
     sql = "CREATE TABLE IF NOT EXISTS pi1_db.reserva( id INT NOT NULL AUTO_INCREMENT, data DATE, carrinho_id INT, usuario_id INT, PRIMARY KEY(id), FOREIGN KEY(carrinho_id) REFERENCES carrinho(id), FOREIGN KEY(usuario_id) REFERENCES usuario(nif) );"
     db_cmd(sql)
+    sql =  "INSERT IGNORE INTO disciplina (codigo, nome) VALUES ('{}','{}');".format( "GES", "Gestão")
+    db_cmd(sql)
+    sql =  "INSERT IGNORE INTO usuario (nif, nome, disciplina, senha) VALUES ('{}','{}','{}','{}');".format( str(0), "Admin", "GES", "admin" )
+    db_cmd(sql)
+
     return redirect(url_for('main'))
 
 
@@ -211,7 +242,6 @@ def maindatadec():
     calendario.set_delta( calendario.get_delta()-1 )
     return redirect(url_for('main'))
 
-
 @app.route("/main/datainc", methods=['GET','POST'])
 def maindatainc():
     calendario.set_delta( calendario.get_delta()+1 )
@@ -220,13 +250,69 @@ def maindatainc():
 
 
 
+
+###############################################################################
+######################################################################### login
+###############################################################################
 @app.route("/login")
 def login():
-    return render_template('login.html')
+    sql = "SELECT nif,nome FROM usuario;"
+    user = db_cmd(sql)
+    return render_template('login.html', user=user)
+
+@app.route("/login/validar", methods=['GET','POST'])
+def loginvalidar():
+    if request.method == 'POST':
+        acesso.set_usuario(request.form['browser'])
+        acesso.set_pwd(request.form['pwd'])
+        sql = "SELECT nif FROM usuario WHERE nome='{}';".format(acesso.get_usuario())
+        nif = db_cmd(sql)
+        acesso.set_nif( nif[0][0] )
+
+        sql = "SELECT senha FROM usuario WHERE nif='{}';".format(acesso.get_nif() )
+        senha = db_cmd(sql)
+        # return "{} == {}".format( senha[0][0], acesso.get_pwd() )
+        if senha[0][0] == acesso.get_pwd():
+            return redirect(url_for('agendar'))
+        else:
+            return redirect(url_for('loginerror'))
+
+@app.route("/loginerror")
+def loginerror():
+    return render_template('login_error.html')
+
+
+
+
 
 @app.route("/agendar")
 def agendar():
-    return render_template('agendar.html')
+    data = calendario.get_data()
+    # sql = "SELECT * FROM reserva WHERE data='{}';".format(data)
+    # lista = db_cmd(sql)
+    sql = "SELECT id,nome FROM carrinho WHERE id NOT IN (SELECT carrinho_id FROM reserva where data='{}' ORDER BY carrinho_id);".format(data)
+    lista = db_cmd(sql)
+    return render_template('agendar.html', lista=lista, data=data, usuario=acesso.get_usuario() )
+
+@app.route("/agendar/datadec", methods=['GET','POST'])
+def agendardatadec():
+    calendario.set_delta( calendario.get_delta()-1 )
+    return redirect(url_for('agendar'))
+
+@app.route("/agendar/datainc", methods=['GET','POST'])
+def agendardatainc():
+    calendario.set_delta( calendario.get_delta()+1 )
+    return redirect(url_for('agendar'))
+
+@app.route("/agendar/carrinho/<id>", methods=['GET','POST'])
+def agendarcarrinho(id):
+    sql =  "INSERT INTO reserva (data, carrinho_id, usuario_id) VALUES ('{}',{},'{}');".format(str(calendario.get_data()), int(id), int(acesso.get_nif()) )
+    db_cmd(sql)
+    return redirect(url_for('agendar'))
+
+
+
+
 
 
 ###############################################################################
@@ -292,7 +378,7 @@ def gerenciarusuarios():
 
 @app.route("/gerenciar/usuarios/add")
 def gerenciarusuariosadd():
-    sql =  "INSERT INTO usuario (nif, nome, disciplina) VALUES ('{}','{}','{}');".format(str(usuario.get_nif()), str(usuario.get_nome()), str(usuario.get_disciplina()) )
+    sql =  "INSERT INTO usuario (nif, nome, disciplina, senha) VALUES ('{}','{}','{}','{}');".format(str(usuario.get_nif()), str(usuario.get_nome()), str(usuario.get_disciplina()),str(usuario.get_nif()) )
     db_cmd(sql)
     return redirect(url_for('gerenciarusuarios'))
 
@@ -420,7 +506,7 @@ def dropalltables():
     db_cmd(sql)
     sql = "DROP TABLE IF EXISTS disciplina;"
     db_cmd(sql)
-    return redirect(url_for('createtables'))
+    return redirect(url_for('index'))
 
 ###############################################################################
 ###############################################################################
