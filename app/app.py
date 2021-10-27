@@ -1,11 +1,11 @@
 from flask import Flask
 from flask import render_template
 from flask import request, url_for, redirect
-from flask.templating import render_template_string
+# from flask.templating import render_template_string
 import mariadb
 import sys
 # import json
-from datetime import datetime, date, timedelta
+from datetime import date, timedelta
 
 
 
@@ -154,9 +154,9 @@ class Calendario:
 
 class Acesso:
     def __init__(self):
-        self.usuario = "Administrador"
+        self.usuario = "Admin"
         self.nif = 0
-        self.pwd = 0
+        self.pwd = "admin"
     def get_usuario(self):
         return(self.usuario)
     def set_usuario(self,user):
@@ -285,6 +285,9 @@ def loginerror():
 
 
 
+###############################################################################
+####################################################################### agendar
+###############################################################################
 @app.route("/agendar")
 def agendar():
     data = calendario.get_data()
@@ -318,7 +321,6 @@ def agendarcarrinho(id):
 ###############################################################################
 ##################################################################### Gerenciar
 ###############################################################################
-
 @app.route("/gerenciar")
 def gerenciar():
     return render_template('gerenciar.html')
@@ -511,13 +513,8 @@ def dropalltables():
 ###############################################################################
 ###############################################################################
 
-
-
-
-
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
 
-###############################################################################
 ###############################################################################
 ###############################################################################

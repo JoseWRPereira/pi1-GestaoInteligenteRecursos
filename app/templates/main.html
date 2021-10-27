@@ -34,21 +34,13 @@
         <tr>
           <th>Carrinho</th>
           <th>Usuário</th>
-          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         {% for e in lista %}
         <tr>
-          <!-- <td> {{ e[0] }} </td> -->
-          <!-- <td> {{ e[1] }} </td> -->
           <td> {{ e[2] }} </td>
           <td> {{ e[3] }} </td>
-          <td>
-            {% if e[3] == user %}
-            <a href="/main/detalhes/{{e[0]}}">Detalhes</a>
-            {% endif %}
-          </td>
         </tr>
         {% endfor %}
       </tbody>

@@ -35,14 +35,12 @@
       <thead>
         <tr>
           <th>Carrinho</th>
-          <th>Usuário</th>
           <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         {% for e in lista %}
         <tr>
-          <td> {{ e[0] }} </td>
           <td> {{ e[1] }} </td>
           <td>
             <a href="/agendar/carrinho/{{e[0]}}">Reservar</a>
