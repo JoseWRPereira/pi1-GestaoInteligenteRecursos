@@ -1,38 +1,22 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
- 
-  <head>
-    <title>Login</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
-  </head>
+{% extends 'base.html' %}
 
-  <body>
-    <header>
-      <hr class="barra">
-      <h2>Login</h2>
-    </header>
+{% block content %}
 
-    <br>
-    <form class="formlogin" action="/login/validar" method="POST">
-    <label for="username">Usuário:</label>
-      <input list="browsers" name="browser">
-      <datalist id="browsers">
-        {% for u in user %}
-          <option value="{{u[1]}}">
-        {% endfor %}
-      </datalist>
-      <br><br>
-      <label for="pwd">Senha : </label>
-      <input type="password" id="pwd" name="pwd">
-      <br><br>
-      <button type="submit" class="bt"> Acessar
-    </form> 
-    <br>
-    <footer>
-      <br>
-      <a class="bt" href="/main"> Voltar</a>
-    </footer>
-  </body>
-</html>
+
+<form class="formlogin" action="/login/validar" method="POST">
+  <label for="username">Usuário:</label>
+    <input list="browsers" name="browser">
+    <datalist id="browsers">
+      {% for u in user %}
+        <option value="{{u[1]}}">
+      {% endfor %}
+    </datalist>
+    <br><br>
+    <label for="pwd">Senha : </label>
+    <input type="password" id="pwd" name="pwd">
+    <br><br>
+    <button type="submit"> Acessar</button>
+  </form> 
+
+
+{% endblock %}

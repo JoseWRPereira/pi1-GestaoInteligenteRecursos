@@ -62,7 +62,7 @@ class Disciplina:
 class Usuario:
     def __init__(self):
         self.nif = 0
-        self.nome = ""
+        self.nome = "Visitante"
         self.disciplina = ""
         self.senha = ""
     def set_nif(self, nif):
@@ -154,9 +154,9 @@ class Calendario:
 
 class Acesso:
     def __init__(self):
-        self.usuario = "Admin"
+        self.usuario = ""
         self.nif = 0
-        self.pwd = "admin"
+        self.pwd = ""
     def get_usuario(self):
         return(self.usuario)
     def set_usuario(self,user):
@@ -193,7 +193,7 @@ acesso = Acesso()
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template('index.html', userName=acesso.get_usuario())
 
 
 
@@ -235,7 +235,7 @@ def main():
     data = calendario.get_data()
     sql = "SELECT * FROM reserva WHERE data='{}';".format(data)
     lista = db_cmd(sql)
-    return render_template('main.html', lista=lista, data=data  )
+    return render_template('main.html', lista=lista, data=data, userName=acesso.get_usuario() )
 
 @app.route("/main/datadec", methods=['GET','POST'])
 def maindatadec():
@@ -258,7 +258,7 @@ def maindatainc():
 def login():
     sql = "SELECT nif,nome FROM usuario;"
     user = db_cmd(sql)
-    return render_template('login.html', user=user)
+    return render_template('login.html', user=user, userName=acesso.get_usuario() )
 
 @app.route("/login/validar", methods=['GET','POST'])
 def loginvalidar():
@@ -282,7 +282,12 @@ def loginerror():
     return render_template('login_error.html')
 
 
-
+@app.route("/logoff")
+def logoff():
+    acesso.set_nif(0)
+    acesso.set_pwd("")
+    acesso.set_usuario("")
+    return redirect(url_for('index'))
 
 
 ###############################################################################
@@ -295,7 +300,7 @@ def agendar():
     # lista = db_cmd(sql)
     sql = "SELECT id,nome FROM carrinho WHERE id NOT IN (SELECT carrinho_id FROM reserva where data='{}' ORDER BY carrinho_id);".format(data)
     lista = db_cmd(sql)
-    return render_template('agendar.html', lista=lista, data=data, usuario=acesso.get_usuario() )
+    return render_template('agendar.html', lista=lista, data=data, usuario=acesso.get_usuario(), userName=acesso.get_usuario() )
 
 @app.route("/agendar/datadec", methods=['GET','POST'])
 def agendardatadec():
@@ -323,7 +328,7 @@ def agendarcarrinho(id):
 ###############################################################################
 @app.route("/gerenciar")
 def gerenciar():
-    return render_template('gerenciar.html')
+    return render_template('gerenciar.html', userName=acesso.get_usuario() )
 
 
 
@@ -341,7 +346,7 @@ def gerenciardisciplinas():
     else:
         sql = "SELECT * FROM disciplina;"
         lista = db_cmd(sql)
-        return render_template('gerenciar_disciplinas.html', lista=lista  )
+        return render_template('gerenciar_disciplinas.html', lista=lista, userName=acesso.get_usuario() )
 
 @app.route("/gerenciar/disciplinas/add")
 def gerenciardisciplinasadd():  
@@ -376,7 +381,7 @@ def gerenciarusuarios():
         discip = db_cmd(sql)
         sql = "SELECT * FROM usuario;"
         lista = db_cmd(sql)
-        return render_template('gerenciar_usuarios.html', lista=lista, discip=discip )
+        return render_template('gerenciar_usuarios.html', lista=lista, discip=discip, userName=acesso.get_usuario() )
 
 @app.route("/gerenciar/usuarios/add")
 def gerenciarusuariosadd():
@@ -407,7 +412,7 @@ def gerenciarcarrinhos():
     else:
         sql = "SELECT * FROM carrinho;"
         lista = db_cmd(sql)
-        return render_template('gerenciar_carrinhos.html', lista=lista )
+        return render_template('gerenciar_carrinhos.html', lista=lista, userName=acesso.get_usuario() )
 
 @app.route("/gerenciar/carrinhos/add")
 def gerenciarcarrinhosadd():
@@ -441,7 +446,7 @@ def gerenciarequipamentos():
         carrinho = db_cmd(sql)
         sql = "SELECT * FROM equipamento;"
         lista = db_cmd(sql)
-        return render_template('gerenciar_equipamentos.html', lista=lista, carrinho=carrinho)
+        return render_template('gerenciar_equipamentos.html', lista=lista, carrinho=carrinho, userName=acesso.get_usuario())
 
 @app.route("/gerenciar/equipamentos/add")
 def gerenciarequipamentosadd():
@@ -477,7 +482,7 @@ def gerenciarreservas():
         usuario = db_cmd(sql)
         sql = "SELECT * FROM reserva;"
         lista = db_cmd(sql)
-        return render_template('gerenciar_reservas.html', lista=lista, carrinho=carrinho, usuario=usuario)
+        return render_template('gerenciar_reservas.html', lista=lista, carrinho=carrinho, usuario=usuario, userName=acesso.get_usuario())
 
 @app.route("/gerenciar/reservas/add")
 def gerenciarreservasadd():

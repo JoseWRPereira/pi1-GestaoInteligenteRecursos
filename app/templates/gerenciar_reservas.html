@@ -1,81 +1,62 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
- 
-  <head>
-    <title>Tabela de reservas</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
-  </head>
+{% extends 'base.html' %}
 
-  <body>
-    <header>
-      <hr class="barra">
-      <h2>Tabela de reservas</h2>
-    </header>
+{% block content %}
 
-    <form class="formlogin" action="/gerenciar/reservas" method="POST">
+<form class="formlogin" action="/gerenciar/reservas" method="POST">
 
-      <label for="calendario">Calendário:</label>
-      <input type="date" id="calendario" name="calendario">
+  <label for="calendario">Calendário:</label>
+  <input type="date" id="calendario" name="calendario">
 
-      <div class="select-block">
-        <label for="carrinho"> Carrinho </label>
-        <select name="carrinho" id="carrinho" required>
-            <option value="">Selecione um Carrinho</option>
-            {% for e in carrinho %}
-            <option value={{e[0]}}>{{e[1]}}</option>
-            {% endfor %}
-          </select>
-      </div>
-
-      <div class="select-block">
-        <label for="usuario"> Usuário </label>
-        <select name="usuario" id="usuario" required>
-            <option value="">Selecione um Usuário</option>
-            {% for e in usuario %}
-            <option value={{e[0]}}>{{e[1]}}</option>
-            {% endfor %}
-          </select>
-      </div>
-
-      <br><br>
-      <input type="submit" value="Salvar">
-    </form>
-
-
-
-
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Data</th>
-          <th>Carrinho</th>
-          <th>Usuário</th>
-          <th>Ações</th>
-          </tr>
-      </thead>
-      <tbody>
-        {% for campo in lista %}
-        <tr>
-          <td> {{ campo[0] }} </td>
-          <td> {{ campo[1] }} </td>
-          <td> {{ campo[2] }} </td>
-          <td> {{ campo[3] }} </td>
-          <td>
-            <a href="/gerenciar/reservas/del/{{campo[0]}}">Excluir</a>
-          </td>
-        </tr>
+  <div class="select-block">
+    <label for="carrinho"> Carrinho </label>
+    <select name="carrinho" id="carrinho" required>
+        <option value="">Selecione um Carrinho</option>
+        {% for e in carrinho %}
+        <option value={{e[0]}}>{{e[1]}}</option>
         {% endfor %}
-      </tbody>
-    </table>
+      </select>
+  </div>
+
+  <div class="select-block">
+    <label for="usuario"> Usuário </label>
+    <select name="usuario" id="usuario" required>
+        <option value="">Selecione um Usuário</option>
+        {% for e in usuario %}
+        <option value={{e[0]}}>{{e[1]}}</option>
+        {% endfor %}
+      </select>
+  </div>
+
+  <br><br>
+  <input type="submit" value="Salvar">
+</form>
 
 
-    <br>
-    <footer>
-      <br>
-      <a class="bt" href="/gerenciar"> Voltar </a>
-    </footer>
-  </body>
-</html>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Data</th>
+      <th>Carrinho</th>
+      <th>Usuário</th>
+      <th>Ações</th>
+      </tr>
+  </thead>
+  <tbody>
+    {% for campo in lista %}
+    <tr>
+      <td> {{ campo[0] }} </td>
+      <td> {{ campo[1] }} </td>
+      <td> {{ campo[2] }} </td>
+      <td> {{ campo[3] }} </td>
+      <td>
+        <a href="/gerenciar/reservas/del/{{campo[0]}}">Excluir</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

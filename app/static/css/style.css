@@ -1,3 +1,58 @@
+h1{
+  border: 2px #eee solid;
+  color: green;
+  text-align: center;
+  padding: 10px;
+}
+
+body {
+  font-size: 18px;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #70D;
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+}
+
+li {
+  float: left;
+}
+lir {
+  float: right;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #9AF;
+}
+
+.active {
+  background-color: #4CAF50;
+}
+
+.landing{
+  max-width: auto;
+  height: 400px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
 hr.barra { 
   display: block;
   margin-top: 0.5em;
@@ -112,52 +167,6 @@ tr:nth-child(even) {
 
 
 
-
-/* .w3-third .bigbtn {
- border:1px solid #e3e3e3;
- background-color:#E7E9EB;
- color:#555;
- margin-bottom:16px;
- width:100%;
- padding:20px 0;
- text-align: center;
- vertical-align: middle;
- display: inline-block;
- text-decoration:none !important;
- border-radius:5px;
-}
- 
-.bigbtn:hover, .bigbtn2:hover {
-  background-color: #282A35; 
-  color: #ffffff !important;
-  border: 1px solid #555;
-}
-
-@media screen and (max-width: 992px){
-.bigbtn {
+.divtab{
   display: block;
-  width: 100%;
 }
-}
-.ribbon-vidx {
-  width: 60px;
-  font-size:14px;
-  padding: 4px;
-  position: absolute;
-  left:-20px;
-  top:-15px;
-  text-align: center;
-  color:black;
-  border-radius:25px;
-  -ms-transform: rotate(-20deg); 
-  transform: rotate(-20deg);
-}
-
-.ws-yellow-hover:hover {
-  background-color:#fff080!important;
-  color:black!important;
-}
-
-.ws-hover-black:hover {
-  background-color:black!important
-} */

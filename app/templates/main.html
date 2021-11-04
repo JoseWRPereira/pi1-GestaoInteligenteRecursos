@@ -1,54 +1,37 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
- 
-  <head>
-    <title>Principal</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
-  </head>
-  
+{% extends 'base.html' %}
 
-  <body>
-    <header>
-      <hr class="barra">
-      <h2>Gerenciamento de Reservas</h2>
-    </header>
+{% block content %}
 
-
-    <table>
-      <tr>
-        <form action="/main/datadec" method="POST">
-          <td><input type="image" class="seta" name="seta" value="esquerda" src="../static/images/icon/setaEsquerda.png" ></td>
-        </form>
-        <td><h3>{{data}}</h3></td>
-        <form action="/main/datainc" method="POST">
-          <td><input type="image" class="seta" name="seta" value="direita" src="../static/images/icon/setaDireita.png" ></td>
-        </form>
-      </tr>
-    </table>
+<table>
+  <tr>
+    <form action="/main/datadec" method="POST">
+      <td><input type="image" class="seta" name="seta" value="esquerda" src="../static/images/icon/setaEsquerda.png" ></td>
+    </form>
+    <td><h3>{{data}}</h3></td>
+    <form action="/main/datainc" method="POST">
+      <td><input type="image" class="seta" name="seta" value="direita" src="../static/images/icon/setaDireita.png" ></td>
+    </form>
+  </tr>
+</table>
 
 
-    <table>
-      <thead>
-        <tr>
-          <th>Carrinho</th>
-          <th>Usuário</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for e in lista %}
-        <tr>
-          <td> {{ e[2] }} </td>
-          <td> {{ e[3] }} </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <footer>
-      <br>
-      <a class="bt" href="/"> Voltar </a>
-      <a class="bt" href="/login"> Login </a>
-    </footer>
-  </body>
-</html>
+<table>
+  <thead>
+    <tr>
+      <th>Carrinho</th>
+      <th>Usuário</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in lista %}
+    <tr>
+      <td> {{ e[2] }} </td>
+      <td> {{ e[3] }} </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
+
+

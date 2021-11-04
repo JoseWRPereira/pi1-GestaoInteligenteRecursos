@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="pt-BR">
  
   <head>
@@ -58,3 +58,47 @@
     </footer>
   </body>
 </html>
+ -->
+
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table>
+  <tr>
+    <form action="/agendar/datadec" method="POST">
+    <td rowspan="2"><input type="image" class="seta" name="seta" value="esquerda" src="../static/images/icon/setaEsquerda.png" ></td>
+    </form>
+    <td><h3>{{data}}</h3></td>
+    <form action="/agendar/datainc" method="POST">
+    <td rowspan="2"><input type="image" class="seta" name="seta" value="direita" src="../static/images/icon/setaDireita.png" ></td>
+    </form>
+  </tr>
+  <tr>
+    <td>{{usuario}}</td>
+  </tr>
+</table>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Carrinho</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in lista %}
+    <tr>
+      <td> {{ e[1] }} </td>
+      <td>
+        <a href="/agendar/carrinho/{{e[0]}}">Reservar</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
