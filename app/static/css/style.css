@@ -113,22 +113,24 @@ img.centrado{
 
 /* Tabelas */
 td{
-	padding: 10px;
+	padding: 5px;
 }
 table{
 	text-align: center;
-	width: 50%;	
+	width: 80%;	
 	border-collapse: collapse;
 	margin: auto;
 	min-width: 300px;
-	margin-top: 10px;
-	border-top: 1px solid black;
-	border-bottom: 1px solid black;
+	margin-top: 20px;
+	border-top: 3px solid green;
+	border-bottom: 3px solid purple;
 }
 
-tr:nth-child(even) {
-  background-color:  rgb(200,225,255);
+tr {
+  border-bottom: 1px solid #ddd;
 }
+
+tr:hover {background-color: #cfc;} 
 
 
 /* Login */
@@ -137,7 +139,6 @@ tr:nth-child(even) {
   display: block;
   text-align: center;
 }
-
 
 
 /* Botoes */

@@ -4,11 +4,11 @@
 
 <form class="formlogin" action="/gerenciar/carrinhos" method="POST">
   <label for="carrinho_id"> ID: </label>
-  <input type="text" name="carrinhoId"><br>
-
+  <input type="text" name="carrinhoId" size="7" maxlength="10" placeholder="99999" required autofocus>
+  &nbsp;
   <label for="carrinho_nome"> Nome: </label>
-  <input type="text" name="carrinhoNome"><br>
-  <br><br>
+  <input type="text" name="carrinhoNome" size="20" maxlength="20" placeholder="Carrinho 1" required >
+  &nbsp;
   <input type="submit" value="Salvar">
 </form>
 

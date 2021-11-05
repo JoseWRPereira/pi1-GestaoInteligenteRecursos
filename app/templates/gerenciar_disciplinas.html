@@ -3,12 +3,10 @@
 {% block content %}
 
   <form class="formlogin" action="/gerenciar/disciplinas" method="POST">
-    <label for="disciplina_id"> Código: </label>
-    <input type="text" name="disciplinaCodigo" >
-    <br><br>
-    <label for="disciplina_nome"> Nome: </label>
-    <input type="text" name="disciplinaNome"><br>
-    <br>
+    <label for="disciplina_id" > Código: </label>
+    <input type="text" name="disciplinaCodigo" size="10" maxlength="10" placeholder="POR" required autofocus >
+    <label for="disciplina_nome" > Nome: </label>
+    <input type="text" name="disciplinaNome" size="30" maxlength="30" placeholder="Português" required>
     <input type="submit" value="Salvar">
   </form>
 

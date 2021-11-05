@@ -5,9 +5,9 @@
 <form class="formlogin" action="/gerenciar/reservas" method="POST">
 
   <label for="calendario">Calendário:</label>
-  <input type="date" id="calendario" name="calendario">
-
-  <div class="select-block">
+  <input type="date" id="calendario" name="calendario" autofocus>
+  <!-- <div class="select-block"> -->
+    &nbsp;
     <label for="carrinho"> Carrinho </label>
     <select name="carrinho" id="carrinho" required>
         <option value="">Selecione um Carrinho</option>
@@ -15,9 +15,10 @@
         <option value={{e[0]}}>{{e[1]}}</option>
         {% endfor %}
       </select>
-  </div>
+  <!-- </div> -->
+  &nbsp;
 
-  <div class="select-block">
+  <!-- <div class="select-block"> -->
     <label for="usuario"> Usuário </label>
     <select name="usuario" id="usuario" required>
         <option value="">Selecione um Usuário</option>
@@ -25,9 +26,8 @@
         <option value={{e[0]}}>{{e[1]}}</option>
         {% endfor %}
       </select>
-  </div>
-
-  <br><br>
+  <!-- </div> -->
+  &nbsp;
   <input type="submit" value="Salvar">
 </form>
 

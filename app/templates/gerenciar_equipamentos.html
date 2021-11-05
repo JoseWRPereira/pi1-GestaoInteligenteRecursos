@@ -3,15 +3,15 @@
 {% block content %}
 
 <form class="formlogin" action="/gerenciar/equipamentos" method="POST">
-  <label for="equip_npatr"> Número de Patrimônio: </label>
-  <input type="text" name="equipNumPatr"><br>
-
+  <label for="equip_npatr"> Nº Patrimônio: </label>
+  <input type="text" name="equipNumPatr"  size="7" maxlength="10" placeholder="99999" required autofocus>
+  &nbsp;
   <label for="equip_nome"> Nome: </label>
-  <input type="text" name="equipNome"><br>
-
+  <input type="text" name="equipNome"  size="20" maxlength="30" placeholder="Chromebook 1" required >
+  &nbsp;
   <label for="equip_descricao"> Descrição: </label>
-  <input type="text" name="equipDescricao" ><br>
-
+  <input type="text" name="equipDescricao" size="30" maxlength="30" placeholder="Notebook Marca X" required><br>
+  <br>
   <div class="select-block">
     <label for="equip_carrinho"> Carrinho </label>
     <select name="equipCarrinho" id="equipCarrinho" required>
@@ -20,14 +20,16 @@
         <option value={{c[0]}}>{{c[1]}}</option>
         {% endfor %}
       </select>
-  </div>
-
-  <div>
+  <!-- </div>
+    <div> -->
+    &nbsp;
+    &nbsp;
     <label for="equip_aquisicao">Data da aquisição:</label>
-    <input type="date" id="equipAquisicao" name="equipAquisicao">
-  </div>
-
-  <div class="select-block">
+    <input type="date" id="equipAquisicao" name="equipAquisicao" >
+  <!-- </div>
+  <div class="select-block"> -->
+    &nbsp;
+    &nbsp;
     <label for="equip_status"> Status: </label>
     <select name="equipStatus" id="equipStatus" required>
         <option value=""> </option>
