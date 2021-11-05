@@ -122,19 +122,24 @@ class Equipamento:# np, nome, carrinho, descricao, adquirido_em, status
         return(self.carrinho)
 
 
-class Reserva:#( id, data, carrinho_id, usuario_id
+class Reserva:#( id, data, periodo, carrinho_id, usuario_id
     def __init__(self):
         self.data = 0
+        self.periodo = 0
         self.carrinho_id = 0
         self.usuario_id = 0
     def set_data(self,data):
         self.data = data
+    def set_periodo(self,periodo):
+        self.periodo = periodo
     def set_carrinho_id(self,carrinho):
         self.carrinho_id = carrinho
     def set_usuario_id(self,usuario):
         self.usuario_id = usuario
     def get_data(self):
         return(self.data)
+    def get_periodo(self):
+        return(self.periodo)
     def get_carrinho_id(self):
         return(self.carrinho_id)
     def get_usuario_id(self):
@@ -213,7 +218,7 @@ def createtables():
     db_cmd(sql)
     sql = "CREATE TABLE IF NOT EXISTS pi1_db.equipamento( np INT NOT NULL, nome VARCHAR(20) NOT NULL, carrinho INT, descricao VARCHAR(50), adquirido_em DATE, status VARCHAR(16), PRIMARY KEY(np));"
     db_cmd(sql)
-    sql = "CREATE TABLE IF NOT EXISTS pi1_db.reserva( id INT NOT NULL AUTO_INCREMENT, data DATE, carrinho_id INT, usuario_id INT, PRIMARY KEY(id), FOREIGN KEY(carrinho_id) REFERENCES carrinho(id), FOREIGN KEY(usuario_id) REFERENCES usuario(nif) );"
+    sql = "CREATE TABLE IF NOT EXISTS pi1_db.reserva( id INT NOT NULL AUTO_INCREMENT, data DATE, periodo CHAR, carrinho_id INT, usuario_id INT, PRIMARY KEY(id), FOREIGN KEY(carrinho_id) REFERENCES carrinho(id), FOREIGN KEY(usuario_id) REFERENCES usuario(nif) );"
     db_cmd(sql)
     sql =  "INSERT IGNORE INTO disciplina (codigo, nome) VALUES ('{}','{}');".format( "GES", "Gestão")
     db_cmd(sql)
@@ -232,10 +237,24 @@ def createtables():
 
 @app.route("/main")
 def main():
+    data1 = calendario.get_data()
+    sql = "SELECT id,data,periodo,carrinho_id,usuario_id FROM reserva WHERE data='{}';".format(data1)
+    lista1 = db_cmd(sql)
+
+    calendario.set_delta( calendario.get_delta()+1 )
+    data2 = calendario.get_data()
+    sql = "SELECT id,data,periodo,carrinho_id,usuario_id FROM reserva WHERE data='{}';".format(data2)
+    lista2 = db_cmd(sql)
+
+    calendario.set_delta( calendario.get_delta()+1 )
+    data3 = calendario.get_data()
+    sql = "SELECT id,data,periodo,carrinho_id,usuario_id FROM reserva WHERE data='{}';".format(data3)
+    lista3 = db_cmd(sql)
+
+    calendario.set_delta( calendario.get_delta()-2 )
     data = calendario.get_data()
-    sql = "SELECT * FROM reserva WHERE data='{}';".format(data)
-    lista = db_cmd(sql)
-    return render_template('main.html', lista=lista, data=data, userName=acesso.get_usuario() )
+
+    return render_template('main.html', userName=acesso.get_usuario(), lista1=lista1, data1=data1, lista2=lista2, data2=data2, lista3=lista3, data3=data3, data=data )
 
 @app.route("/main/datadec", methods=['GET','POST'])
 def maindatadec():
@@ -275,6 +294,7 @@ def loginvalidar():
         if senha[0][0] == acesso.get_pwd():
             return redirect(url_for('agendar'))
         else:
+            acesso.set_usuario("")
             return redirect(url_for('loginerror'))
 
 @app.route("/loginerror")
@@ -466,12 +486,13 @@ def gerenciarequipamentosdel(id):
 
 ###############################################################################
 ############################################################ Gerenciar reservas
-############### (id), data, carrinho_id->carrinho(id), usuario_id->usuario(nif)
+###### (id), data, periodo, carrinho_id->carrinho(id), usuario_id->usuario(nif)
 ###############################################################################
 @app.route("/gerenciar/reservas", methods=['GET','POST'])
 def gerenciarreservas():
     if request.method == 'POST':
         reserva.set_data(request.form['calendario'])
+        reserva.set_periodo(request.form['periodo'])
         reserva.set_carrinho_id(request.form['carrinho'])
         reserva.set_usuario_id(request.form['usuario'])
         return redirect(url_for('gerenciarreservasadd'))
@@ -486,7 +507,7 @@ def gerenciarreservas():
 
 @app.route("/gerenciar/reservas/add")
 def gerenciarreservasadd():
-    sql =  "INSERT INTO reserva (data, carrinho_id, usuario_id) VALUES ('{}','{}','{}');".format(str(reserva.get_data()), str(reserva.get_carrinho_id()), str(reserva.get_usuario_id()) )
+    sql =  "INSERT INTO reserva (data, periodo, carrinho_id, usuario_id) VALUES ('{}','{}','{}','{}');".format(str(reserva.get_data()), str(reserva.get_periodo()),str(reserva.get_carrinho_id()), str(reserva.get_usuario_id()) )
     db_cmd(sql)
     return redirect(url_for('gerenciarreservas'))
 

@@ -1,22 +1,7 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
- 
-  <head>
-    <title>Login error</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="../static/css/style.css" />
-  </head>
+{% extends 'base.html' %}
 
-  <body>
-    <header>
-      <hr class="barra">
-      <h2>Login incorreto! :(</h2>
-    </header>
-
-    <footer>
-      <br>
-      <a class="bt" href="/main"> Voltar</a>
-    </footer>
-  </body>
-</html>
+{% block content %}
+<center>
+<h2>Login incorreto! :(</h2>
+</center>
+{% endblock %}

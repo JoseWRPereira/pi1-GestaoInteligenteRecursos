@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS pi1_db.equipamento(
 CREATE TABLE IF NOT EXISTS pi1_db.reserva( 
     id INT NOT NULL AUTO_INCREMENT, 
     data DATE, 
+    periodo CHAR,
     carrinho_id INT, 
     usuario_id INT, 
     PRIMARY KEY(id), 

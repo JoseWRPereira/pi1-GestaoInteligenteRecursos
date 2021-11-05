@@ -8,6 +8,17 @@
   <input type="date" id="calendario" name="calendario" autofocus>
   <!-- <div class="select-block"> -->
     &nbsp;
+
+  <label for="reserva_periodo"> Status: </label>
+  <select name="periodo" id="periodo" required>
+      <option value=""> </option>
+      <option value="M">Matutino</option>
+      <option value="V">Vespertino</option>
+      <option value="N">Noturno</option>
+    </select>
+
+      &nbsp;
+
     <label for="carrinho"> Carrinho </label>
     <select name="carrinho" id="carrinho" required>
         <option value="">Selecione um Carrinho</option>
@@ -39,6 +50,7 @@
     <tr>
       <th>ID</th>
       <th>Data</th>
+      <th>Período</th>
       <th>Carrinho</th>
       <th>Usuário</th>
       <th>Ações</th>
@@ -51,6 +63,7 @@
       <td> {{ campo[1] }} </td>
       <td> {{ campo[2] }} </td>
       <td> {{ campo[3] }} </td>
+      <td> {{ campo[4] }} </td>
       <td>
         <a href="/gerenciar/reservas/del/{{campo[0]}}">Excluir</a>
       </td>
