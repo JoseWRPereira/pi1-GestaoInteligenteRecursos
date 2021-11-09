@@ -11,12 +11,15 @@
             <ul>
                 <li><a class="active" href="/">Agendei</a></li>
                 <li><a class="deactive" href="/createtables">Reservas</a></li>
-                {% if userName=='Admin' %}
+                {% if userName!='' %}
                 <li><a class="deactive" href="/agendar">Agendar</a></li>
+                <li><a class="deactive" href="/excluir">Excluir</a></li>
+                {% endif %}
+                {% if userName=='Admin' %}
                 <li><a class="deactive" href="/gerenciar/disciplinas">Disciplinas</a></li>
                 <li><a class="deactive" href="/gerenciar/usuarios">Usuários</a></li>
                 <li><a class="deactive" href="/gerenciar/carrinhos">Carrinhos</a></li>
-                <li><a class="deactive" href="/gerenciar/equipamentos">Equipamentos</a></li>
+                <!-- <li><a class="deactive" href="/gerenciar/equipamentos">Equipamentos</a></li> -->
                 <li><a class="deactive" href="/gerenciar/reservas">Reservas</a></li>
                 {% endif %}
                 <lir>
@@ -28,11 +31,8 @@
                     {% endif %}
                 </lir>
             </ul>
-    
-
         </header>
         <br>
-    
         {% block content %} {% endblock %}
 
         <footer>

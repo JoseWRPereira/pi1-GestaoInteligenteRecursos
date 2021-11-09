@@ -5,7 +5,7 @@ from flask import request, url_for, redirect
 import mariadb
 import sys
 # import json
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 
 
@@ -156,6 +156,8 @@ class Calendario:
         return(self.delta)
     def get_data(self):
         return(self.data + timedelta(days = self.delta))
+    def get_data_today(self):
+        return( date.today() )
 
 class Acesso:
     def __init__(self):
@@ -253,7 +255,6 @@ def main():
 
     calendario.set_delta( calendario.get_delta()-2 )
     data = calendario.get_data()
-
     return render_template('main.html', userName=acesso.get_usuario(), lista1=lista1, data1=data1, lista2=lista2, data2=data2, lista3=lista3, data3=data3, data=data )
 
 @app.route("/main/datadec", methods=['GET','POST'])
@@ -316,11 +317,27 @@ def logoff():
 @app.route("/agendar")
 def agendar():
     data = calendario.get_data()
-    # sql = "SELECT * FROM reserva WHERE data='{}';".format(data)
-    # lista = db_cmd(sql)
-    sql = "SELECT id,nome FROM carrinho WHERE id NOT IN (SELECT carrinho_id FROM reserva where data='{}' ORDER BY carrinho_id);".format(data)
-    lista = db_cmd(sql)
-    return render_template('agendar.html', lista=lista, data=data, usuario=acesso.get_usuario(), userName=acesso.get_usuario() )
+    sql = "SELECT id,nome FROM carrinho;"
+    listaCarrinhos = db_cmd(sql)
+    sql = "SELECT periodo,carrinho_id,usuario_id FROM reserva where data='{}' ORDER BY carrinho_id;".format(data)
+    listaReservas = db_cmd(sql)
+    listaPeriodos = (['M','Matutino'],['V','Vespertino'],['N','Noturno'])
+    lista = []
+    achei = 0
+    for p in listaPeriodos:
+        for c in listaCarrinhos:
+            achei = 0
+            for l in listaReservas:
+                if p[0]==l[0] and c[0]==l[1]:
+                    achei = 1
+                    break
+            if not achei:
+                dt = []
+                # dt.append( datetime.now().strftime("%Y-%m-%d") )
+                dt.append( data )
+                lista.append( (dt,str(p[0]),str(c[0])) )
+    return render_template('agendar.html', lista=lista, userName=acesso.get_usuario() )
+
 
 @app.route("/agendar/datadec", methods=['GET','POST'])
 def agendardatadec():
@@ -332,15 +349,28 @@ def agendardatainc():
     calendario.set_delta( calendario.get_delta()+1 )
     return redirect(url_for('agendar'))
 
-@app.route("/agendar/carrinho/<id>", methods=['GET','POST'])
-def agendarcarrinho(id):
-    sql =  "INSERT INTO reserva (data, carrinho_id, usuario_id) VALUES ('{}',{},'{}');".format(str(calendario.get_data()), int(id), int(acesso.get_nif()) )
+@app.route("/agendar/carrinho/<id>/<periodo>", methods=['GET','POST'])
+def agendarcarrinho(id, periodo):
+    sql =  "INSERT INTO reserva (data, periodo, carrinho_id, usuario_id) VALUES ('{}','{}',{},'{}');".format(str(calendario.get_data()), str(periodo),int(id), int(acesso.get_nif()) )
     db_cmd(sql)
     return redirect(url_for('agendar'))
 
 
 
+###############################################################################
+####################################################################### excluir
+###############################################################################
+@app.route("/excluir")
+def excluir():
+    sql = "SELECT id,data,periodo,carrinho_id FROM reserva WHERE usuario_id='{}' AND data>='{}';".format(acesso.get_nif(), calendario.get_data_today() )
+    lista = db_cmd(sql)
+    return render_template('excluir.html', lista=lista, userName=acesso.get_usuario() )
 
+@app.route("/excluir/<id>")
+def excluir_id(id):
+    sql = "DELETE FROM reserva WHERE id='{}';".format(id)
+    db_cmd(sql)
+    return redirect(url_for('excluir'))
 
 
 ###############################################################################

@@ -117,13 +117,13 @@ td{
 }
 table{
 	text-align: center;
-	width: 80%;	
+	width: 89%;	
 	border-collapse: collapse;
 	margin: auto;
 	min-width: 300px;
 	margin-top: 20px;
-	border-top: 3px solid green;
-	border-bottom: 3px solid purple;
+	border-top: 2px solid green;
+	border-bottom: 2px solid purple;
 }
 
 tr {
