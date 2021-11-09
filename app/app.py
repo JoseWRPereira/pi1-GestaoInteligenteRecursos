@@ -531,7 +531,7 @@ def gerenciarreservas():
         carrinho = db_cmd(sql)
         sql = "SELECT nif,nome FROM usuario;"
         usuario = db_cmd(sql)
-        sql = "SELECT * FROM reserva;"
+        sql = "SELECT * FROM reserva ORDER BY id DESC;"
         lista = db_cmd(sql)
         return render_template('gerenciar_reservas.html', lista=lista, carrinho=carrinho, usuario=usuario, userName=acesso.get_usuario())
 
