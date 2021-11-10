@@ -1,11 +1,9 @@
 from flask import Flask
 from flask import render_template
 from flask import request, url_for, redirect
-# from flask.templating import render_template_string
 import mariadb
 import sys
-# import json
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 
 
 
